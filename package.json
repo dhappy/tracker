@@ -7,6 +7,7 @@
   "author": "Will Holcomb <will@dhappy.org>",
   "license": "MIT",
   "dependencies": {
-    "angular": "^1.6.5"
+    "angular": "^1.6.5",
+    "angular-material": "^1.1.4"
   }
 }
