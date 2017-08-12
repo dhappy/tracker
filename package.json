@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:dhappy/tracker-ui.git",
   "author": "Will Holcomb <will@dhappy.org>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "angular": "^1.6.5"
+  }
 }
