@@ -6,19 +6,25 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router'])
 	    $stateProvider
 	        .state('home', {
 		    url: '/home',
-		    templateUrl: '/home.html',
+		    templateUrl: 'home.html',
 		    controller: 'ToolsCtrl'
 		})
 	        .state('addActivity', {
 		    url: '/addActivity',
-		    templateUrl: '/addActivity.html',
+		    templateUrl: 'addActivity.html',
 		    controller: 'ActivityCtrl as ctrl'
 		})
 	    $urlRouterProvider.otherwise('home')
 	}])
-    .controller('ActivityCtrl', function($scope) {
+    .controller('ActivityCtrl', function($scope, $location) {
+	$scope.activities = [{ name: 'ttt' }]
+	
 	this.newActivity = function() {
-	    console.log('t')
+	    $scope.activities.push({ name: 'test' }) 
+	}
+
+	this.cancel = function() {
+	    $location.path('home')
 	}
     })
     .controller('ToolsCtrl', function($scope, $location) {
