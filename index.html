@@ -16,7 +16,7 @@
     </div>
 
     <script type="text/ng-template" id="home.html">
-      <md-content ng-controller="ToolsCtrl as ctrl">
+      <md-content ng-controller="HomeController as ctrl">
 	<md-toolbar>
 	  <div class="md-toolbar-tools">
 	    <md-truncate>Habit Tracker</md-truncate>
@@ -26,14 +26,14 @@
 	    <md-button class="md-fab md-mini" aria-label="Add" ng-click='conditionalAdd()'>
 	      <i class="material-icons">add</i>
 	    </md-button>
-	    <md-button class="md-fab md-mini" aria-label="Settings">
+	    <md-button class="md-fab md-mini" aria-label="Settings" ng-click='settings()'>
 	      <i class="material-icons">settings</i>
 	    </md-button>
 	  </div>
 	</md-toolbar>
 	
 	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
-	  <md-tab ng-controller='ActivitiesCtrl' label="activities">
+	  <md-tab label="activities">
 	    <md-content class="md-padding">
 	      <div ng-repeat="activity in activities">
 		<span>{{activity.name}}</span>
@@ -65,18 +65,43 @@
     </script>
       
     <script type="text/ng-template" id="addActivity.html">
-      <form name="activityForm" ng-submit='ctrl.newActivity()'>
-	<md-input-container>
-	  <label>Name</label>
-	  <input ng-model="activity.name"/>
-	</md-input-container>
-	<md-input-container>
-	  <label>Color</label>
-	  <input ng-model="activity.color"/>
-	</md-input-container>
-	<md-button class="md-raised md-primary" ng-click='ctrl.cancel()'>Cancel</md-button>
-	<md-button class="md-raised md-primary" type="submit">Create</md-button>
-      </form>
+      <md-dialog aria-label="Add Activity">
+	<form ng-cloak ng-submit='ctrl.newActivity()'>
+	  <md-toolbar>
+	    <div class="md-toolbar-tools">
+	      <h2>Add Activity</h2>
+	      <span flex></span>
+	      <md-button class="md-icon-button" ng-click="cancel()" aria-label="Close Dialog">
+		<i class="material-icons">close</i>
+	      </md-button>
+	    </div>
+	  </md-toolbar>
+
+	  <md-dialog-content>
+	    <div>
+	      <md-input-container>
+		<label>Name</label>
+		<input ng-model="name"/>
+	      </md-input-container>
+	    </div>
+	    <div>
+	      <md-input-container>
+		<label>Color</label>
+		<input ng-model="color"/>
+	      </md-input-container>
+	    </div>
+	    <md-dialog-actions layout="row">
+	      <span flex></span>
+	      <md-button ng-click="cancel()">
+		Cancel
+	      </md-button>
+	      <md-button ng-click="returnNew()">
+		Create
+	      </md-button>
+	    </md-dialog-actions>
+	  </md-dialog-content>
+	</form>
+      </md-dialog>
     </script>
     
     <script type="text/ng-template" id="/addMood.html">
