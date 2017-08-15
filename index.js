@@ -7,7 +7,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router'])
 	        .state('home', {
 		    url: '/home',
 		    templateUrl: 'home.html',
-		    controller: 'HomeController'
+		    controller: 'HomeController as ctrl'
 		})
 	        .state('addActivity', {
 		    url: '/addActivity',
@@ -17,7 +17,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router'])
 	    $urlRouterProvider.otherwise('home')
 	}])
     .controller('HomeController', function($scope, $mdDialog, $location) {
-	$scope.activities = [{ name: 'ttt' }]
+	$scope.activities = [{ name: 'Testing' }, { name: 'Number Two' }, { name: 'Index Two' }]
 
 	this.newActivity = function() {
 	    $scope.activities.push({ name: 'test' }) 
@@ -34,7 +34,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router'])
 		    parent: angular.element(document.body),
 		    targetEvent: event,
 		    clickOutsideToClose: true,
-		    fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+		    fullscreen: true // Only for -xs, -sm breakpoints.
 		})
 		    .then(function(value) {
 			console.log(value)

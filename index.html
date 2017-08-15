@@ -7,8 +7,7 @@
 	  rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	  rel="stylesheet"/>
-    <link href="index.css"
-	  rel="stylesheet"/>
+    <link href="index.css" rel="stylesheet"/>
   </head>
   <body ng-app='eventTypes'>
     <div ng-cloak>
@@ -16,7 +15,7 @@
     </div>
 
     <script type="text/ng-template" id="home.html">
-      <md-content ng-controller="HomeController as ctrl">
+      <md-content id='tabs'>
 	<md-toolbar>
 	  <div class="md-toolbar-tools">
 	    <md-truncate>Habit Tracker</md-truncate>
@@ -35,9 +34,17 @@
 	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
 	  <md-tab label="activities">
 	    <md-content class="md-padding">
-	      <div ng-repeat="activity in activities">
-		<span>{{activity.name}}</span>
-	      </div>
+	      <md-list ng-cloak>
+		<md-list-item class='entry' ng-repeat="activity in activities">
+		  <md-button ng-click='activitySelected($index)'
+			     class="md-list-item-content">
+		    <div class="md-list-item-text" layout="row" layout='center'>
+		      <span flex>{{activity.name}}</span>
+		      <span>{{activity.name}}</span>
+		    </div>
+		  </md-button>
+		</md-list-item>
+	      </md-list>
 	    </md-content>
 	  </md-tab>
 	  <md-tab label="mood">
@@ -66,7 +73,7 @@
       
     <script type="text/ng-template" id="addActivity.html">
       <md-dialog aria-label="Add Activity">
-	<form ng-cloak ng-submit='ctrl.newActivity()'>
+	<form ng-cloak>
 	  <md-toolbar>
 	    <div class="md-toolbar-tools">
 	      <h2>Add Activity</h2>
@@ -78,18 +85,14 @@
 	  </md-toolbar>
 
 	  <md-dialog-content>
-	    <div>
-	      <md-input-container>
-		<label>Name</label>
-		<input ng-model="name"/>
-	      </md-input-container>
-	    </div>
-	    <div>
-	      <md-input-container>
-		<label>Color</label>
-		<input ng-model="color"/>
-	      </md-input-container>
-	    </div>
+	    <md-input-container>
+	      <label>Name</label>
+	      <input ng-model="name"/>
+	    </md-input-container>
+	    <md-input-container>
+	      <label>Color</label>
+	      <input ng-model="color"/>
+	    </md-input-container>
 	    <md-dialog-actions layout="row">
 	      <span flex></span>
 	      <md-button ng-click="cancel()">
@@ -104,10 +107,10 @@
       </md-dialog>
     </script>
     
-    <script type="text/ng-template" id="/addMood.html">
+    <script type="text/ng-template" id="addMood.html">
     </script>
 
-    <script type="text/ng-template" id="/addEvent.html">
+    <script type="text/ng-template" id="addEvent.html">
     </script>
 
     <script src='node_modules/angular/angular.js' type='application/javascript'></script>
