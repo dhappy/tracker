@@ -36,11 +36,11 @@
 	    <md-content class="md-padding">
 	      <md-list ng-cloak>
 		<md-list-item class='entry' ng-repeat="activity in activities">
-		  <md-button ng-click='activitySelected($index)'
+		  <md-button ng-click='activitySelected(activity.id)'
 			     class="md-list-item-content">
 		    <div class="md-list-item-text" layout="row" layout='center'>
 		      <span flex>{{activity.name}}</span>
-		      <span>{{activity.name}}</span>
+		      <timer start-time='activity.lastEvent'>{{days}}:{{hours}}:{{mminutes}}:{{sseconds}}</timer>
 		    </div>
 		  </md-button>
 		</md-list-item>
@@ -118,6 +118,9 @@
     <script src="node_modules/angular-aria/angular-aria.min.js"></script>
     <script src='node_modules/angular-material/angular-material.min.js'></script>
     <script src='node_modules/angular-ui-router/release/angular-ui-router.min.js'></script>
+    <script src='node_modules/humanize-duration/humanize-duration.js'></script>
+    <script src='node_modules/moment/moment.js'></script>
+    <script src='node_modules/angular-timer/dist/angular-timer.min.js'></script>
     <script src='index.js'></script>  
   </body>
 </html>
