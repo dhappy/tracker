@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
+angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
     .config([
 	'$stateProvider',
 	'$urlRouterProvider',
@@ -12,6 +12,17 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 
 	    $urlRouterProvider.otherwise('home')
 	}])
+    .service('Activity', function(DS) {
+	return DS.defineResource({
+	    name: 'activity',
+	    hasMany: {
+	        events: {
+		    localField: '',
+		    foreignKey: 'post_id'
+		}
+	    }
+	});})
+    }).run(function (User) {})
     .controller('HomeController', function($scope, $mdDialog, $location) {
 	$scope.activities = [{ name: 'Testing', id: 1, lastEvent: new Date() },
 			     { name: 'Number Two', id: 2, lastEvent: new Date() },
