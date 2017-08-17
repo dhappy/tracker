@@ -54,7 +54,12 @@
 	  </md-tab>
 	  <md-tab label="events">
 	    <md-content class="md-padding">
-	      <h1 class="md-display-2">Events</h1>
+	      <md-list ng-cloak>
+		<md-list-item class='entry' ng-repeat="event in events">
+		  <span flex>{{getActivityById(event.activity_id).name}}</span>
+		  <span>{{event.time.toTimeString()}}</span>
+		</md-list-item>
+	      </md-list>
 	    </md-content>
 	  </md-tab>
 	  <md-tab label="goals">

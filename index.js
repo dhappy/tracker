@@ -16,6 +16,9 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 	$scope.activities = [{ name: 'Testing', id: 1, lastEvent: new Date() },
 			     { name: 'Number Two', id: 2, lastEvent: new Date() },
 			     { name: 'Index Two', id: 3, lastEvent: new Date() }]
+	$scope.events = [
+	    { activity_id: 1, time: new Date() }
+	]
 
 	$scope.conditionalAdd = function(event) {
 	    var nextPage
@@ -43,14 +46,17 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 	    }
 	}
 
+	$scope.getActivityById = function(id) {
+	    console.log(id)
+	    return $scope.activities.find(x => x.id === id)
+	}
+	
 	$scope.activitySelected = function(id) {
-	    for(i in $scope.activities) {
-		var activity = $scope.activities[i]
-		if(activity.id == id) {
-		    console.log(activity.lastEvent)
-		    activity.lastEvent = new Date()
-		}
-	    }
+	    var activity = $scope.getActivityById(id)
+	    var now = new Date()
+	    activity.lastEvent = now
+	    $scope.events.push({ activity_id: activity.id,
+				 time: now })
 	}
 	
 	function DialogController($scope, $mdDialog) {
