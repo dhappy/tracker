@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
+angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
     .config([
 	'$stateProvider',
 	'$urlRouterProvider',
@@ -12,6 +12,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 
 	    $urlRouterProvider.otherwise('home')
 	}])
+/*
     .service('Activity', function(DS) {
 	return DS.defineResource({
 	    name: 'activity',
@@ -21,8 +22,10 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 		    foreignKey: 'post_id'
 		}
 	    }
-	});})
-    }).run(function (User) {})
+	})
+    })
+    .run(function(Activity) {})
+*/
     .controller('HomeController', function($scope, $mdDialog, $location) {
 	$scope.activities = [{ name: 'Testing', id: 1, lastEvent: new Date() },
 			     { name: 'Number Two', id: 2, lastEvent: new Date() },
@@ -33,7 +36,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 
 	$scope.conditionalAdd = function(event) {
 	    var nextPage
-	    switch($scope.selectedIndex) {
+	    switch($scope.selectedTab) {
 	    case 0:
 		$mdDialog.show({
 		    controller: DialogController,
@@ -46,6 +49,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 		    .then(function(value) {
 			if(value.name) {
 			    $scope.activities.push(value)
+			    $scope.selectedTab = 2
 			}
 		    },
 			  function() {})
@@ -58,7 +62,6 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 	}
 
 	$scope.getActivityById = function(id) {
-	    console.log(id)
 	    return $scope.activities.find(x => x.id === id)
 	}
 	
@@ -68,6 +71,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', ])
 	    activity.lastEvent = now
 	    $scope.events.push({ activity_id: activity.id,
 				 time: now })
+	    $scope.selectedTab = 2
 	}
 	
 	function DialogController($scope, $mdDialog) {

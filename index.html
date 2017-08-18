@@ -31,7 +31,7 @@
 	  </div>
 	</md-toolbar>
 	
-	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
+	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab" md-swipe-content>
 	  <md-tab label="activities">
 	    <md-content class="md-padding">
 	      <md-list ng-cloak>
@@ -55,7 +55,7 @@
 	  <md-tab label="events">
 	    <md-content class="md-padding">
 	      <md-list ng-cloak>
-		<md-list-item class='entry' ng-repeat="event in events">
+		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
 		  <span flex>{{getActivityById(event.activity_id).name}}</span>
 		  <span>{{event.time.toTimeString()}}</span>
 		</md-list-item>
