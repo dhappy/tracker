@@ -123,11 +123,11 @@
     </script>
 
     <script type="text/ng-template" id="addMood.html">
-      <md-dialog aria-label="Add Mood">
+      <md-dialog aria-label="Add Desciptor">
 	<form ng-cloak>
 	  <md-toolbar>
 	    <div class="md-toolbar-tools">
-	      <h2>Add Mood</h2>
+	      <h2>Add Desciptor</h2>
 	      <span flex></span>
 	      <md-button class="md-icon-button" ng-click="cancel()" aria-label="Close Dialog">
 		<i class="material-icons">close</i>
@@ -182,15 +182,12 @@
 		Cancel
 	      </md-button>
 	      <md-button ng-click="returnNew()">
-		Create
+		Record
 	      </md-button>
 	    </md-dialog-actions>
 	  </md-dialog-content>
 	</form>
       </md-dialog>
-    </script>
-
-    <script type="text/ng-template" id="addMood.html">
     </script>
 
     <script type="text/ng-template" id="addEvent.html">
@@ -204,6 +201,8 @@
     <script src='node_modules/humanize-duration/humanize-duration.js'></script>
     <script src='node_modules/moment/moment.js'></script>
     <script src='node_modules/angular-timer/dist/angular-timer.min.js'></script>
+    <script src='node_modules/chart.js/Chart.min.js'></script>
+    <script src='node_modules/angular-chart.js/dist/angular-chart.min.js'></script>
     <script src='index.js'></script>  
   </body>
 </html>
