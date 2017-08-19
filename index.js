@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', 'chart.js'])
+angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     .config([
 	'$stateProvider',
 	'$urlRouterProvider',
@@ -108,8 +108,7 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer', 'chart.js'])
 	    return $scope.activities.find(x => x.id === id)
 	}
 	
-	$scope.activitySelected = function(id) {
-	    var activity = $scope.getActivityById(id)
+	$scope.activitySelected = function(activity) {
 	    var now = new Date()
 	    activity.lastEvent = now
 	    $scope.events.push({ activity_id: activity.id,
