@@ -30,12 +30,12 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 	$scope.activities = [{ name: 'Testing', id: 1, lastEvent: new Date() },
 			     { name: 'Number Two', id: 2, lastEvent: new Date() },
 			     { name: 'Index Two', id: 3, lastEvent: new Date() }]
+	$scope.descriptors = [{ name: 'Testing', id: 1, lastEvent: new Date() }]
 	$scope.events = [
 	    { activity_id: 1, time: new Date() }
 	]
 
 	$scope.conditionalAdd = function(event) {
-	    var nextPage
 	    switch($scope.selectedTab) {
 	    case 0:
 		$mdDialog.show({
@@ -49,12 +49,25 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 		    .then(function(value) {
 			if(value.name) {
 			    $scope.activities.push(value)
-			    $scope.selectedTab = 2
 			}
 		    },
 			  function() {})
 		break
 	    case 1:
+		$mdDialog.show({
+		    controller: DialogController,
+		    templateUrl: 'addMood.html',
+		    parent: angular.element(document.body),
+		    targetEvent: event,
+		    clickOutsideToClose: true,
+		    fullscreen: true // Only for -xs, -sm breakpoints.
+		})
+		    .then(function(value) {
+			if(value.name) {
+			    $scope.desciptors.push(value)
+			}
+		    },
+			  function() {})
 		break
 	    case 2:
 		break
@@ -74,7 +87,27 @@ angular.module('eventTypes', ['ngMaterial', 'ui.router', 'timer'])
 	    $scope.selectedTab = 2
 	}
 	
+	$scope.moodSelected = function(id) {
+	    var activity = $scope.getActivityById(id)
+	    $mdDialog.show({
+		controller: DialogController,
+		templateUrl: 'recordMood.html',
+		parent: angular.element(document.body),
+		targetEvent: event,
+		clickOutsideToClose: true,
+		fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+		.then(function(value) {
+		    if(value.name) {
+			$scope.desciptors.push(value)
+		    }
+		},
+		      function() {})
+	}
+
 	function DialogController($scope, $mdDialog) {
+	    $scope.weight = 0
+	    
 	    $scope.hide = function() {
 		$mdDialog.hide()
 	    }

@@ -49,7 +49,17 @@
 	  </md-tab>
 	  <md-tab label="mood">
 	    <md-content class="md-padding">
-	      <h1 class="md-display-2">Mood</h1>
+	      <md-list ng-cloak>
+		<md-list-item class='entry' ng-repeat="mood in descriptors">
+		  <md-button ng-click='moodSelected(descriptor.id)'
+			     class="md-list-item-content">
+		    <div class="md-list-item-text" layout="row" layout='center'>
+		      <span flex>{{mood.name}}</span>
+		      <timer start-time='mood.lastEvent'>{{days}}:{{hours}}:{{mminutes}}:{{sseconds}}</timer>
+		    </div>
+		  </md-button>
+		</md-list-item>
+	      </md-list>
 	    </md-content>
 	  </md-tab>
 	  <md-tab label="events">
@@ -57,7 +67,7 @@
 	      <md-list ng-cloak>
 		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
 		  <span flex>{{getActivityById(event.activity_id).name}}</span>
-		  <span>{{event.time.toTimeString()}}</span>
+		  <span>{{moment(event.time).format('H:mm:ss')}}</span>
 		</md-list-item>
 	      </md-list>
 	    </md-content>
@@ -111,7 +121,75 @@
 	</form>
       </md-dialog>
     </script>
-    
+
+    <script type="text/ng-template" id="addMood.html">
+      <md-dialog aria-label="Add Mood">
+	<form ng-cloak>
+	  <md-toolbar>
+	    <div class="md-toolbar-tools">
+	      <h2>Add Mood</h2>
+	      <span flex></span>
+	      <md-button class="md-icon-button" ng-click="cancel()" aria-label="Close Dialog">
+		<i class="material-icons">close</i>
+	      </md-button>
+	    </div>
+	  </md-toolbar>
+
+	  <md-dialog-content>
+	    <md-input-container>
+	      <label>Name</label>
+	      <input ng-model="name"/>
+	    </md-input-container>
+	    <md-input-container>
+	      <label>Color</label>
+	      <input ng-model="color"/>
+	    </md-input-container>
+	    <md-dialog-actions layout="row">
+	      <span flex></span>
+	      <md-button ng-click="cancel()">
+		Cancel
+	      </md-button>
+	      <md-button ng-click="returnNew()">
+		Create
+	      </md-button>
+	    </md-dialog-actions>
+	  </md-dialog-content>
+	</form>
+      </md-dialog>
+    </script>
+
+    <script type="text/ng-template" id="recordMood.html">
+      <md-dialog aria-label="Record Mood">
+	<form ng-cloak>
+	  <md-toolbar>
+	    <div class="md-toolbar-tools">
+	      <h2>Record Mood</h2>
+	      <span flex></span>
+	      <md-button class="md-icon-button" ng-click="cancel()" aria-label="Close Dialog">
+		<i class="material-icons">close</i>
+	      </md-button>
+	    </div>
+	  </md-toolbar>
+
+	  <md-dialog-content>
+	    <h1 ng-attr-style='color: {{colorOf(weight)}}'>{{weight}}</h1>
+	    <md-slider-container>
+	      <md-slider flex min="-100" max="100" ng-model="weight" aria-label="Weight"></md-slider>
+	    </md-slider-container>
+	    <md-dialog-actions layout="row">
+	      <span flex></span>
+	      <md-button ng-click="cancel()">
+		Cancel
+	      </md-button>
+	      <md-button ng-click="returnNew()">
+		Create
+	      </md-button>
+	    </md-dialog-actions>
+	  </md-dialog-content>
+	</form>
+      </md-dialog>
+    </script>
+
     <script type="text/ng-template" id="addMood.html">
     </script>
 
