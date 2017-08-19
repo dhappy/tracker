@@ -79,7 +79,12 @@
 	  </md-tab>
 	  <md-tab label="stats">
 	    <md-content class="md-padding">
-	      <h1 class="md-display-2">Stats</h1>
+	      <canvas id="line" class="chart chart-line" chart-data="data"
+		      chart-labels="labels" chart-series="series"
+		      chart-options="options"
+		      chart-dataset-override="datasetOverride"
+		      chart-click="onClick">
+		</canvas>
 	    </md-content>
 	  </md-tab>
 	</md-tabs>
@@ -201,7 +206,7 @@
     <script src='node_modules/humanize-duration/humanize-duration.js'></script>
     <script src='node_modules/moment/moment.js'></script>
     <script src='node_modules/angular-timer/dist/angular-timer.min.js'></script>
-    <script src='node_modules/chart.js/Chart.min.js'></script>
+    <script src='node_modules/chart.js/dist/Chart.min.js'></script>
     <script src='node_modules/angular-chart.js/dist/angular-chart.min.js'></script>
     <script src='index.js'></script>  
   </body>
