@@ -52,7 +52,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 	    switch($scope.selectedTab) {
 	    case 0:
 		$mdDialog.show({
-		    controller: 'DialogController',
+		    controller: 'SubstanceController as ctrl',
 		    templateUrl: 'addActivity.html',
 		    parent: angular.element(document.body),
 		    targetEvent: event,
@@ -157,6 +157,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 		      function() {})
 	}
 
+
 	function RecordController($scope, $mdDialog, $controller, term) {
 	    $controller('DialogController', { $scope: $scope })
 
@@ -170,4 +171,26 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 				 time: new Date()})
 	    }
 	}
-    })
+})
+    .controller('SubstanceController', function($scope, $mdDialog, $controller, $http) {
+	    $controller('DialogController', { $scope: $scope })
+
+	    this.querySearch = function(text) {
+	    	return new Promise(function(resolve, reject) {
+			    	var query =
+	    				'SELECT DISTINCT ?item ?name WHERE {'
+		  				+ ' ?item wdt:P31/wdt:P279* wd:Q8386.'
+  						+ ' ?item rdfs:label ?name.'
+  						+ ' FILTER(LANG(?name) = "en")'
+  						+ ` FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`
+  						+ '} LIMIT 15'
+  					var url = `https://query.wikidata.org/sparql?query=${query}`
+  					$http.get(url).then(function(result) {
+						resolve(result.data.results.bindings)
+					},
+					function() {
+						reject()
+					})
+				})
+	    }
+	})
