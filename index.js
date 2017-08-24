@@ -28,7 +28,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         return store
     })
     .service('Activity', function(store) {
+        var date = new Date().toISOString()
+
         return store.defineMapper('activity', {
+            schema: {
+                properties: {
+                    lastEvent: {
+                        type: 'string',
+                        get() { return date }
+                    }
+                },
+            },
             relations: {
                 hasMany: {
                     event: {
@@ -79,13 +89,14 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             })
         })
 */
-        Activity.findAll().then((activities) => {
+        Activity.findAll({}, { with: ['lastEvent'] }).then((activities) => {
+            console.log(activities)
             $scope.activities = activities
         })
         Term.findAll().then((terms) => {
             $scope.terms = terms
         });
-        Event.findAll({}, { with: ['activity'] }).then((events) => {
+        Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
             $scope.events = events
         })
 
@@ -274,7 +285,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 time: new Date()
             }
             Event.create(params).then((event) => {
-                console.log(event)
                 event.save()
                 $mdDialog.hide(event)
             })
