@@ -23,10 +23,11 @@
 
       	    <span flex></span>
 
-      	    <md-button class="md-fab md-mini" aria-label="Add" ng-click='conditionalAdd()'>
+      	    <md-button class="md-fab md-mini" aria-label="Add"
+             ng-click='ctrl.conditionalAdd()'>
       	      <i class="material-icons">add</i>
       	    </md-button>
-      	    <md-button class="md-fab md-mini" aria-label="Settings" ng-click='settings()'>
+      	    <md-button class="md-fab md-mini" aria-label="Settings" ng-click='ctrl.settings()'>
       	      <i class="material-icons">settings</i>
       	    </md-button>
       	  </div>
@@ -68,7 +69,7 @@
       	      <md-list ng-cloak>
       		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
       		  <span ng-show='event.term' flex>{{event.term.name}}</span>
-      		  <span ng-show='event.activity' flex>{{event.activity.name}}</span>
+      		  <span ng-show='event.activity' flex>{{event.activity}}</span>
       		  <span>{{display_time(event.time)}}</span>
       		</md-list-item>
       	      </md-list>
@@ -167,7 +168,7 @@
       	      <md-button ng-click="cancel()">Cancel</md-button>
       	      <md-button ng-click="ctrl.returnNew()">Create</md-button>
       	    </md-dialog-actions>
-      	  </md-dialog-content>
+      	  </md-dialog-content> 
       	</form>
       </md-dialog>
     </script>
@@ -217,6 +218,7 @@
     <script src='node_modules/angular-chart.js/dist/angular-chart.min.js'></script>
     <script src='node_modules/js-data/dist/js-data.js'></script>
     <script src='node_modules/js-data-localstorage/dist/js-data-localstorage.js'></script>
+    <script src='node_modules/js-data-angular/dist/js-data-angular.js'></script>
     <script src='index.js'></script>  
   </body>
 </html>

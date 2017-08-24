@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
+angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'js-data'])
     .config([
         '$stateProvider',
         '$urlRouterProvider',   
@@ -14,122 +14,62 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         }
     ])
     .service('adapter', function() {
-        var adapter = new JSDataLocalStorage.LocalStorageAdapter({  
+        var adapter = new DSLocalStorageAdapter({  
             beforeCreate: function(mapper, props, opts) {
-                JSDataLocalStorage.LocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
+                DSLocalStorage.DSLocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
                 props.created_at = new Date()
             },
         })
         return adapter
     })
     .factory('store', function(adapter) {
-        var store = new JSData.DataStore()
+        var store = new JSData.DS()
 
         store.registerAdapter('localstorage', adapter, { default: true })
 
         return store
     })
     .service('Event', function(store) {
-        return store.defineMapper({
+        return store.defineResource({
             name: 'event',
-            schema: {
-             type: 'object',
-                properties: {
-                    id: { type: 'string' },
-                    time: { type: ['string', 'null'] },
-                    source_id: { type: 'string' },
-                    weight: { type: 'number' },
-                }
-            },
             relations: {
                 belongsTo: {
                     activity: {
+                        localField: 'activity',
                         foreignKey: 'source_id',
-                        localField: 'activity'
                     }
                 }
             }
         })
     })
-    .run(function(Event, adapter) {
-        Event.registerAdapter('localstorage', adapter, { 'default': true });
-    })
+    .run((Event) => {})
     .service('Activity', function(store) {
-        return store.defineMapper({
+        return store.defineResource({
             name: 'activity',
-            schema: {
-                type: 'object',
-                properties: {
-                    id: { type: 'string' }, 
-                    name: { type: 'string' },
-                    color: { type: 'string' },
-                    qid: { type: 'string' },
-                    lastEvent: {
-                        type: ['string', 'null'],
-                        get: function () {
-                            var last = store.filter('event', {
-                                orderBy: 'time',
-                                limit: 1,
-                                where: {
-                                    source_id: this.id
-                                }
-                            })
-                            console.log(last)
-                            return last
-                        }
-                    }
-                }
-            },
             relations: {
                 hasMany: {
                     event: {
+                        localField: 'events',
                         foreignKey: 'source_id',
-                        localField: 'events'
                     }
                 }
             }
         })
     })
-    .run(function(Activity, adapter) {
-        Activity.registerAdapter('localstorage', adapter, { 'default': true });
-    })
+    .run((Activity) => {})
     .service('Term', function(store) {
-        return store.defineMapper({
-            name: 'term',
-            schema: {
-                type: 'object',
-                properties: {
-                    id: { type: 'string' },
-                    name: { type: 'string' },
-                    color: { type: 'string' },
-                }   
-            },
-        })
-    })
-    .run(function(Term, adapter) {
-        Term.registerAdapter('localstorage', adapter, { 'default': true })
+        return store.defineResource({ name: 'term' })
     })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-        var updateAll = function(id) {
-            if(typeof id === 'undefined' ||
-               (id.search('Find') === -1 && id.search('after') === 0)) {
-                Activity.findAll().then(function(activities) {
-                    $scope.activities = activities
-                })
-                Term.findAll().then(function(terms) {
-                    $scope.terms = terms
-                })
-                Event.findAll().then(function(events) {
-                    $scope.events = events
-                })
-            }
-           }
-        store.on('all', updateAll)
-        updateAll()
+        Activity.bindAll({}, $scope, 'activities')
+        Term.bindAll({}, $scope, 'terms')
+        Event.bindAll({}, $scope, 'events')
 
-        console.log('s', Event)
+        var a = Activity.create({ name: 'test' }).then((activity) => {
+            console.log(activity)
+        })
 
-        $scope.conditionalAdd = function(event) {
+        this.conditionalAdd = function(event) {
             switch($scope.selectedTab) {
             case 0:
                 $mdDialog.show({
@@ -196,8 +136,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 time: now,
             }
             console.log(data)
-            Event.create(data).then((s) => {    
-                console.log('p', s)
+            Event.create(data).then((s) => {
+                console.log('p', s, Event.find(s.id, { with: ['activity']}))
             })
 
             $scope.selectedTab = 2
@@ -219,7 +159,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 $scope.events.push(value)
                 $scope.selectedTab = 2
             },
-                function() {})
+                function() {}
+            )
         }
     })
     .controller('DialogController', function($scope, $mdDialog) {
