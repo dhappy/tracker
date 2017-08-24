@@ -15,7 +15,7 @@
     "angular-timer": "^1.3.5",
     "angular-ui-router": "^1.0.3",
     "humanize-duration": "^3.10.1",
-    "js-data": "^3.0.1",
+    "js-data": "2.9",
     "js-data-localstorage": "/3.0.0-beta.2",
     "moment": "^2.18.1"
   }

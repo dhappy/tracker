@@ -13,81 +13,35 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             $urlRouterProvider.otherwise('home')
         }
     ])
-    .factory('store', function() {
-        var store = new JSData.DataStore()
+    .service('adapter', function() {
         var adapter = new JSDataLocalStorage.LocalStorageAdapter({  
             beforeCreate: function(mapper, props, opts) {
                 JSDataLocalStorage.LocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
-                props.created_at = Date.now()
+                props.created_at = new Date()
             },
-            debug: true,
         })
+        return adapter
+    })
+    .factory('store', function(adapter) {
+        var store = new JSData.DataStore()
 
         store.registerAdapter('localstorage', adapter, { default: true })
 
         return store
     })
-    .service('Activity', function(store) {
-        return store.defineMapper({
-            name: 'activity',
-            schema: {
-                type: 'object',
-                properties: {
-                    name: { type: 'string' },
-                    color: { type: 'string' },
-                    qid: { type: 'string' },
-                }
-            },
-            relations: {
-                hasMany: {
-                    event: {
-                        foreignKey: 'source_id',
-                        localField: 'event'
-                    }
-                }
-            }
-        })
-    })
-    .run(function(Activity) {})
-    .service('Term', function(store) {
-        return store.defineMapper({
-            name: 'term',
-            schema: {
-                type: 'object',
-                properties: {
-                    name: { type: 'string' },
-                    color: { type: 'string' }
-                }   
-            },
-            relations: {
-                hasMany: {
-                    event: {
-                        foreignKey: 'source_id',
-                        localField: 'event'
-                    }
-                }
-            }
-        })
-    })
-    .run(function(Term) {})
     .service('Event', function(store) {
         return store.defineMapper({
             name: 'event',
             schema: {
-                type: 'object',
+             type: 'object',
                 properties: {
-                    time: { type: 'string' },
+                    id: { type: 'string' },
+                    time: { type: ['string', 'null'] },
                     source_id: { type: 'string' },
-                    weight: { type: 'number' }
+                    weight: { type: 'number' },
                 }
             },
             relations: {
-                belongsTo: {
-                    term: {
-                        foreignKey: 'source_id',
-                        localField: 'term'
-                    }
-                },
                 belongsTo: {
                     activity: {
                         foreignKey: 'source_id',
@@ -97,7 +51,64 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             }
         })
     })
-    .run(function(Event) {})
+    .run(function(Event, adapter) {
+        Event.registerAdapter('localstorage', adapter, { 'default': true });
+    })
+    .service('Activity', function(store) {
+        return store.defineMapper({
+            name: 'activity',
+            schema: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' }, 
+                    name: { type: 'string' },
+                    color: { type: 'string' },
+                    qid: { type: 'string' },
+                    lastEvent: {
+                        type: ['string', 'null'],
+                        get: function () {
+                            var last = store.filter('event', {
+                                orderBy: 'time',
+                                limit: 1,
+                                where: {
+                                    source_id: this.id
+                                }
+                            })
+                            console.log(last)
+                            return last
+                        }
+                    }
+                }
+            },
+            relations: {
+                hasMany: {
+                    event: {
+                        foreignKey: 'source_id',
+                        localField: 'events'
+                    }
+                }
+            }
+        })
+    })
+    .run(function(Activity, adapter) {
+        Activity.registerAdapter('localstorage', adapter, { 'default': true });
+    })
+    .service('Term', function(store) {
+        return store.defineMapper({
+            name: 'term',
+            schema: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    color: { type: 'string' },
+                }   
+            },
+        })
+    })
+    .run(function(Term, adapter) {
+        Term.registerAdapter('localstorage', adapter, { 'default': true })
+    })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
         var updateAll = function(id) {
             if(typeof id === 'undefined' ||
@@ -112,9 +123,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                     $scope.events = events
                 })
             }
-        }
+           }
         store.on('all', updateAll)
         updateAll()
+
+        console.log('s', Event)
 
         $scope.conditionalAdd = function(event) {
             switch($scope.selectedTab) {
@@ -143,7 +156,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             }
 
             $scope.display_time = function(time) {
-                    return moment(time).format('H:mm:ss')
+                return moment(time).format('H:mm:ss')
             }
             
             $scope.labels = ["January", "February", "March", "April",
@@ -176,10 +189,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         }
 
         this.activitySelected = function(activity) {
-            var now = new Date()
+            var now = new Date().toISOString()
             activity.lastEvent = now
-            $scope.events.push({ activity_id: activity.id,
-                     time: now })
+            var data = {
+                source_id: activity.id,
+                time: now,
+            }
+            console.log(data)
+            Event.create(data).then((s) => {    
+                console.log('p', s)
+            })
+
             $scope.selectedTab = 2
         }
         
@@ -250,6 +270,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                     name: $scope.name,
                     color: $scope.color,
                 }
+
                 if($scope.substance) {
                     data['qid'] = $scope.substance.qid.value
                 }
@@ -257,7 +278,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 $mdDialog.hide(
                     Activity.create(data)
                     .then(
-                        () => {},
+                        (s) => {console.log('na', s)},
                         () => {
                             console.warn('Failed to save activity')
                         }

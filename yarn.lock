@@ -79,9 +79,9 @@ js-data-localstorage@/3.0.0-beta.2:
   version "3.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/js-data-localstorage/-/js-data-localstorage-3.0.0-beta.2.tgz#e272161f10c326f866180693be37197eb58bdebb"
 
-js-data@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/js-data/-/js-data-3.0.1.tgz#84d0c5e3031b7fd645b25db4c6e0aab8911df202"
+js-data@2.9:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/js-data/-/js-data-2.9.0.tgz#95f5669d50479f300345b93953dbaae81c848565"
 
 moment@^2.10.6, moment@^2.18.1:
   version "2.18.1"
