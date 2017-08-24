@@ -90,10 +90,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         })
     })
     .run(function(Event) {})
-    .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event) {
+    .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
         Activity.findAll().then(function(activities) {
             $scope.activities = activities
+            store.on('all', this.onChange, this)
         })
+        Activity.bindAll({}, $scope, '$scope.activities')
+
         Term.findAll().then(function(terms) {
             $scope.terms = terms
         })
@@ -105,40 +108,27 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         $scope.conditionalAdd = function(event) {
             switch($scope.selectedTab) {
             case 0:
-            $mdDialog.show({
-                controller: 'SubstanceController as ctrl',
-                templateUrl: 'addActivity.html',
-                parent: angular.element(document.body),
-                targetEvent: event,
-                clickOutsideToClose: true,
-                fullscreen: true // Only for -xs, -sm breakpoints.
-            })
-            .then(function(value) {
-                console.log(value.name.length)
-                if(value.name.length > 0) {
-                    $scope.activities.push(value)
-                }
-            },
-                function() {})
-            break
+                $mdDialog.show({
+                    controller: 'SubstanceController as ctrl',
+                    templateUrl: 'addActivity.html',
+                    parent: angular.element(document.body),
+                    targetEvent: event,
+                    clickOutsideToClose: true,
+                    fullscreen: true // Only for -xs, -sm breakpoints.
+                })
+                break
             case 1:
-            $mdDialog.show({
-                controller: 'DialogController',
-                templateUrl: 'addTerm.html',
-                parent: angular.element(document.body),
-                targetEvent: event,
-                clickOutsideToClose: true,
-                fullscreen: true
-            })
-            .then(function(value) {
-                if(value.name) {
-                    $scope.terms.push(value)
-                }
-            },
-                function() {})
-            break
+                $mdDialog.show({
+                    controller: 'TermController as ctrl',
+                    templateUrl: 'addTerm.html',
+                    parent: angular.element(document.body),
+                    targetEvent: event,
+                    clickOutsideToClose: true,
+                    fullscreen: true
+                })
+                break
             case 2:
-            break
+                break
             }
 
             $scope.display_time = function(time) {
@@ -184,25 +174,25 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         
         this.moodSelected = function(term) {
             $mdDialog.show({
-            controller: RecordController,
-            templateUrl: 'recordMood.html',
-            parent: angular.element(document.body),
-            targetEvent: event,
-            clickOutsideToClose: true,
-            fullscreen: true,
-            locals: {
-                term: term
-            }
+                controller: RecordController,
+                templateUrl: 'recordMood.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                fullscreen: true,
+                locals: {
+                    term: term
+                }
             })
             .then(function(value) {
                 $scope.events.push(value)
                 $scope.selectedTab = 2
             },
-                  function() {})
+                function() {})
         }
 
 
-        function RecordController($scope, $mdDialog, $controller, term) {
+        function RecordController($scope, $mdDialog, $controller, term, Term) {
             $controller('DialogController', { $scope: $scope })
 
             $scope.weight = 0
@@ -210,9 +200,12 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             $scope.name = term.name
             
             this.returnNew = function() {
-            $mdDialog.hide({ term_id: term.id,
-                     weight: $scope.weight,
-                     time: new Date()})
+                var params = {
+                    term_id: term.id,
+                    weight: $scope.weight,
+                    time: new Date()
+                }
+                $mdDialog.hide(Event.create(params))
             }
         }
     })
@@ -223,6 +216,16 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         
         $scope.cancel = function() {
             $mdDialog.cancel()
+        }
+    })
+    .controller('TermController', function($scope, $controller, $mdDialog, Term) {
+        $controller('DialogController', { $scope: $scope })
+
+        this.returnNew = function() {
+            console.log('h')
+            if($scope.name) {
+                $mdDialog.hide(Term.create({ name: $scope.name, color: $scope.color }))
+            }
         }
     })
     .controller('SubstanceController', function($scope, $controller, $http, $mdDialog, Activity) {
@@ -248,6 +251,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         }
 
         this.returnNew = function() {
-            $mdDialog.hide(Activity.create({ name: $scope.name, color: $scope.color }))
+            if($scope.name) {
+                $mdDialog.hide(Activity.create({ name: $scope.name, color: $scope.color }))
+            }
         }
     })
