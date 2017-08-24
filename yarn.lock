@@ -75,6 +75,10 @@ humanize-duration@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/humanize-duration/-/humanize-duration-3.10.1.tgz#65b550c0aa095156ecb7c340db44ee0bdf71af4b"
 
+js-data-angular@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/js-data-angular/-/js-data-angular-3.2.1.tgz#dfd3a106f8cc8fc9ab53f890cb740d32bf23a1fd"
+
 js-data-localstorage@2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/js-data-localstorage/-/js-data-localstorage-2.3.2.tgz#cf901ed7535ff62eadad138baefda17413d603c0"
