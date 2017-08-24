@@ -5,16 +5,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         function($stateProvider, $urlRouterProvider) {
             $stateProvider
                 .state('home', {
-                url: '/home',
-                templateUrl: 'home.html',
-                controller: 'HomeController as ctrl'
-            })
+                    url: '/home',
+                    templateUrl: 'home.html',
+                    controller: 'HomeController as ctrl'
+                })
 
-        $urlRouterProvider.otherwise('home')
-    }])
+            $urlRouterProvider.otherwise('home')
+        }
+    ])
     .factory('store', function() {
         var store = new JSData.DataStore()
-        var adapter = new JSDataLocalStorage.LocalStorageAdapter({
+        var adapter = new JSDataLocalStorage.LocalStorageAdapter({  
             beforeCreate: function(mapper, props, opts) {
                 JSDataLocalStorage.LocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
                 props.created_at = Date.now()
@@ -34,7 +35,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 properties: {
                     name: { type: 'string' },
                     color: { type: 'string' },
-                    wikidata_key: { type: 'string' },
+                    qid: { type: 'string' },
                 }
             },
             relations: {
@@ -56,7 +57,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 properties: {
                     name: { type: 'string' },
                     color: { type: 'string' }
-                }
+                }   
             },
             relations: {
                 hasMany: {
