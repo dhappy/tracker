@@ -12,37 +12,91 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
         $urlRouterProvider.otherwise('home')
     }])
-/*
-    .service('Activity', function(DS) {
-    return DS.defineResource({
-        name: 'activity',
-        hasMany: {
-            events: {
-            localField: '',
-            foreignKey: 'post_id'
-        }
-        }
+    .factory('store', function () {
+        var store = new JSData.DataStore()
+        var adapter = new JSDataLocalStorage.LocalStorageAdapter()
+
+        store.registerAdapter('localstorage', adapter, { default: true })
+
+        return store
     })
+    .service('Activity', function(store) {
+        return store.defineMapper({
+            name: 'activity',
+            schema: {
+                type: 'object',
+                properties: {
+                    name: { type: 'string' },
+                    wikidata_key: { type: 'string' },
+                    color: { type: 'string' }
+                }
+            },
+            relations: {
+                hasMany: {
+                    event: {
+                        foreignKey: 'source_id',
+                        localField: 'event'
+                    }
+                }
+            }
+        })
     })
     .run(function(Activity) {})
-*/
-    .controller('DialogController', function($scope, $mdDialog) {
-        $scope.hide = function() {
-            $mdDialog.hide()
-        }
-        
-        $scope.cancel = function() {
-            $mdDialog.cancel()
-        }
-        
-        $scope.returnNew = function() {
-            $mdDialog.hide({ name: $scope.name, color: $scope.color })
-        }
+    .service('Term', function(store) {
+        return store.defineMapper({
+            name: 'term',
+            schema: {
+                type: 'object',
+                properties: {
+                    name: { type: 'string' },
+                    color: { type: 'string' }
+                }
+            },
+            relations: {
+                hasMany: {
+                    event: {
+                        foreignKey: 'source_id',
+                        localField: 'event'
+                    }
+                }
+            }
+        })
     })
-    .controller('HomeController', function($scope, $mdDialog, $location) {
-        $scope.activities = [{ name: 'Testing', id: 1, lastEvent: new Date() },
-                     { name: 'Number Two', id: 2, lastEvent: new Date() },
-                     { name: 'Index Two', id: 3, lastEvent: new Date() }]
+    .run(function(Term) {})
+    .service('Event', function(store) {
+        return store.defineMapper({
+            name: 'event',
+            schema: {
+                type: 'object',
+                properties: {
+                    source_id: { type: 'string' },
+                    weight: { type: 'number' }
+                }
+            },
+            relations: {
+                belongsTo: {
+                    term: {
+                        foreignKey: 'source_id',
+                        localField: 'term'
+                    }
+                },
+                belongsTo: {
+                    activity: {
+                        foreignKey: 'source_id',
+                        localField: 'activity'
+                    }
+                }
+            }
+        })
+    })
+    .run(function(Event) {})
+    .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event) {
+        Activity.findAll().then(function(activities) {
+            $scope.activities = activities
+        })
+        Term.findAll().then(function(terms) {
+            $scope.terms = terms
+        })
         $scope.terms = [{ name: 'Testing', id: 1, lastEvent: new Date() }]
         $scope.events = [
             { activity_id: 1, time: new Date() }
@@ -60,11 +114,12 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 fullscreen: true // Only for -xs, -sm breakpoints.
             })
             .then(function(value) {
-                if(value.name) {
+                console.log(value.name.length)
+                if(value.name.length > 0) {
                     $scope.activities.push(value)
                 }
-                },
-                  function() {})
+            },
+                function() {})
             break
             case 1:
             $mdDialog.show({
@@ -79,58 +134,47 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 if(value.name) {
                     $scope.terms.push(value)
                 }
-                },
-                  function() {})
+            },
+                function() {})
             break
             case 2:
             break
             }
 
             $scope.display_time = function(time) {
-            return moment(time).format('H:mm:ss')
+                return moment(time).format('H:mm:ss')
             }
             
             $scope.labels = ["January", "February", "March", "April",
-                     "May", "June", "July"]
+                             "May", "June", "July"]
             $scope.series = ['Series A', 'Series B']
             $scope.data = [
                 [65, 59, 80, 81, 56, 55, 40],
                 [28, 48, 40, 25, 86, 27, 90]
             ]
-            $scope.onClick = function(points, evt) {
-                console.log(points, evt)
-            }
             $scope.datasetOverride = [{ yAxisID: 'y-axis-1' },
-                          { yAxisID: 'y-axis-2' }]
+                                      { yAxisID: 'y-axis-2' }]
             $scope.options = {
-            scales: {
-                yAxes: [
-                {
-                    id: 'y-axis-1',
-                    type: 'linear',
-                    display: true,
-                    position: 'left'
-                },
-                {
-                    id: 'y-axis-2',
-                    type: 'linear',
-                    display: true,
-                    position: 'right'
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'y-axis-1',
+                            type: 'linear',
+                            display: true,
+                            position: 'left'
+                        },
+                        {
+                            id: 'y-axis-2',
+                            type: 'linear',
+                            display: true,
+                            position: 'right'
+                        }
+                    ]
                 }
-                ]
-            }
             }
         }
 
-        $scope.getActivityById = function(id) {
-            return $scope.activities.find(x => x.id === id)
-        }
-        
-        $scope.getTermById = function(id) {
-            return $scope.terms.find(x => x.id === id)
-        }
-        
-        $scope.activitySelected = function(activity) {
+        this.activitySelected = function(activity) {
             var now = new Date()
             activity.lastEvent = now
             $scope.events.push({ activity_id: activity.id,
@@ -138,7 +182,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             $scope.selectedTab = 2
         }
         
-        $scope.moodSelected = function(term) {
+        this.moodSelected = function(term) {
             $mdDialog.show({
             controller: RecordController,
             templateUrl: 'recordMood.html',
@@ -165,14 +209,23 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
             $scope.name = term.name
             
-            $scope.returnNew = function() {
+            this.returnNew = function() {
             $mdDialog.hide({ term_id: term.id,
                      weight: $scope.weight,
                      time: new Date()})
             }
         }
     })
-    .controller('SubstanceController', function($scope, $mdDialog, $controller, $http) {
+    .controller('DialogController', function($scope, $mdDialog) {
+        $scope.hide = function() {
+            $mdDialog.hide()
+        }
+        
+        $scope.cancel = function() {
+            $mdDialog.cancel()
+        }
+    })
+    .controller('SubstanceController', function($scope, $controller, $http, $mdDialog, Activity) {
         $controller('DialogController', { $scope: $scope })
 
         this.querySearch = function(text) {
@@ -192,5 +245,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                         reject()
                     })
                 })
+        }
+
+        this.returnNew = function() {
+            $mdDialog.hide(Activity.create({ name: $scope.name, color: $scope.color }))
         }
     })
