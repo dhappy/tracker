@@ -1,7 +1,7 @@
 angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     .config([
         '$stateProvider',
-        '$urlRouterProvider',
+        '$urlRouterProvider',   
         function($stateProvider, $urlRouterProvider) {
             $stateProvider
                 .state('home', {
@@ -12,9 +12,15 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
         $urlRouterProvider.otherwise('home')
     }])
-    .factory('store', function () {
+    .factory('store', function() {
         var store = new JSData.DataStore()
-        var adapter = new JSDataLocalStorage.LocalStorageAdapter()
+        var adapter = new JSDataLocalStorage.LocalStorageAdapter({
+            beforeCreate: function(mapper, props, opts) {
+                JSDataLocalStorage.LocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
+                props.created_at = Date.now()
+            },
+            debug: true,
+        })
 
         store.registerAdapter('localstorage', adapter, { default: true })
 
@@ -27,8 +33,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 type: 'object',
                 properties: {
                     name: { type: 'string' },
+                    color: { type: 'string' },
                     wikidata_key: { type: 'string' },
-                    color: { type: 'string' }
                 }
             },
             relations: {
@@ -69,6 +75,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             schema: {
                 type: 'object',
                 properties: {
+                    time: { type: 'string' },
                     source_id: { type: 'string' },
                     weight: { type: 'number' }
                 }
@@ -91,19 +98,22 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     })
     .run(function(Event) {})
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-        Activity.findAll().then(function(activities) {
-            $scope.activities = activities
-            store.on('all', this.onChange, this)
-        })
-        Activity.bindAll({}, $scope, '$scope.activities')
-
-        Term.findAll().then(function(terms) {
-            $scope.terms = terms
-        })
-        $scope.terms = [{ name: 'Testing', id: 1, lastEvent: new Date() }]
-        $scope.events = [
-            { activity_id: 1, time: new Date() }
-        ]
+        var updateAll = function(id) {
+            if(typeof id === 'undefined' ||
+               (id.search('Find') === -1 && id.search('after') === 0)) {
+                Activity.findAll().then(function(activities) {
+                    $scope.activities = activities
+                })
+                Term.findAll().then(function(terms) {
+                    $scope.terms = terms
+                })
+                Event.findAll().then(function(events) {
+                    $scope.events = events
+                })
+            }
+        }
+        store.on('all', updateAll)
+        updateAll()
 
         $scope.conditionalAdd = function(event) {
             switch($scope.selectedTab) {
@@ -132,7 +142,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             }
 
             $scope.display_time = function(time) {
-                return moment(time).format('H:mm:ss')
+                    return moment(time).format('H:mm:ss')
             }
             
             $scope.labels = ["January", "February", "March", "April",
@@ -190,24 +200,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             },
                 function() {})
         }
-
-
-        function RecordController($scope, $mdDialog, $controller, term, Term) {
-            $controller('DialogController', { $scope: $scope })
-
-            $scope.weight = 0
-
-            $scope.name = term.name
-            
-            this.returnNew = function() {
-                var params = {
-                    term_id: term.id,
-                    weight: $scope.weight,
-                    time: new Date()
-                }
-                $mdDialog.hide(Event.create(params))
-            }
-        }
     })
     .controller('DialogController', function($scope, $mdDialog) {
         $scope.hide = function() {
@@ -222,23 +214,24 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         $controller('DialogController', { $scope: $scope })
 
         this.returnNew = function() {
-            console.log('h')
             if($scope.name) {
                 $mdDialog.hide(Term.create({ name: $scope.name, color: $scope.color }))
             }
         }
     })
-    .controller('SubstanceController', function($scope, $controller, $http, $mdDialog, Activity) {
+    .controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http) {
         $controller('DialogController', { $scope: $scope })
 
         this.querySearch = function(text) {
             return new Promise(function(resolve, reject) {
                     var query =
-                        'SELECT DISTINCT ?item ?name WHERE {'
-                        + ' ?item wdt:P31/wdt:P279* wd:Q8386.'
-                        + ' ?item rdfs:label ?name.'
-                        + ' FILTER(LANG(?name) = "en")'
-                        + ` FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`
+                        'SELECT DISTINCT'
+                        + ' ?item ?name (REPLACE(STR(?item),".*Q","Q") AS ?qid)'
+                        + ' WHERE {'
+                        + '  ?item wdt:P31/wdt:P279* wd:Q8386.'
+                        + '  ?item rdfs:label ?name.'
+                        + '  FILTER(LANG(?name) = "en")'
+                        + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
                         + '} LIMIT 15'
                     var url = `https://query.wikidata.org/sparql?query=${query}`
                     $http.get(url).then(function(result) {
@@ -252,7 +245,40 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
         this.returnNew = function() {
             if($scope.name) {
-                $mdDialog.hide(Activity.create({ name: $scope.name, color: $scope.color }))
+                var data = {
+                    name: $scope.name,
+                    color: $scope.color,
+                }
+                if($scope.substance) {
+                    data['qid'] = $scope.substance.qid.value
+                }
+
+                $mdDialog.hide(
+                    Activity.create(data)
+                    .then(
+                        () => {},
+                        () => {
+                            console.warn('Failed to save activity')
+                        }
+                    )
+                    
+                )
             }
+        }
+    })
+    .controller('RecordController', function($scope, $mdDialog, $controller, term, Event) {
+        $controller('DialogController', { $scope: $scope })
+
+        $scope.weight = 0
+
+        $scope.name = term.name
+        
+        this.returnNew = function() {
+            var params = {
+                term_id: term.id,
+                weight: $scope.weight,
+                time: new Date()
+            }
+            $mdDialog.hide(Event.create(params))
         }
     })
