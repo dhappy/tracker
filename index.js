@@ -1,72 +1,92 @@
-angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'js-data'])
+angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     .config([
         '$stateProvider',
         '$urlRouterProvider',   
         function($stateProvider, $urlRouterProvider) {
+            console.log('sp')
             $stateProvider
                 .state('home', {
                     url: '/home',
                     templateUrl: 'home.html',
                     controller: 'HomeController as ctrl'
                 })
-
             $urlRouterProvider.otherwise('home')
         }
     ])
-    .service('adapter', function() {
-        var adapter = new DSLocalStorageAdapter({  
+    .factory('store', function() {
+        console.log('store')
+        var store = new JSData.DataStore()
+        var adapter = new JSDataLocalStorage.LocalStorageAdapter({
             beforeCreate: function(mapper, props, opts) {
-                DSLocalStorage.DSLocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
+                JSDataLocalStorage.LocalStorageAdapter.prototype.beforeCreate.apply(this, arguments)
                 props.created_at = new Date()
             },
         })
-        return adapter
-    })
-    .factory('store', function(adapter) {
-        var store = new JSData.DS()
 
         store.registerAdapter('localstorage', adapter, { default: true })
 
         return store
     })
-    .service('Event', function(store) {
-        return store.defineResource({
-            name: 'event',
-            relations: {
-                belongsTo: {
-                    activity: {
-                        localField: 'activity',
-                        foreignKey: 'source_id',
-                    }
-                }
-            }
-        })
-    })
-    .run((Event) => {})
     .service('Activity', function(store) {
-        return store.defineResource({
-            name: 'activity',
+        return store.defineMapper('activity', {
             relations: {
                 hasMany: {
                     event: {
                         localField: 'events',
-                        foreignKey: 'source_id',
+                        foreignKey: 'activity_id',
                     }
                 }
             }
         })
     })
-    .run((Activity) => {})
     .service('Term', function(store) {
-        return store.defineResource({ name: 'term' })
+        return store.defineMapper('term', {
+            relations: {
+                hasMany: {
+                    event: {
+                        localField: 'events',
+                        foreignKey: 'term_id',
+                    }
+                }
+            }
+        })   
+    })
+    .service('Event', function(store) {
+        return store.defineMapper('event', {
+            relations: {
+                belongsTo: {
+                    activity: {
+                        localField: 'activity',
+                        foreignKey: 'activity_id',
+                    }
+                },
+                belongsTo: {
+                    term: {
+                        localField: 'term',
+                        foreignKey: 'term_id',
+                    }
+                }
+
+            }
+        })
     })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-        Activity.bindAll({}, $scope, 'activities')
-        Term.bindAll({}, $scope, 'terms')
-        Event.bindAll({}, $scope, 'events')
-
-        var a = Activity.create({ name: 'test' }).then((activity) => {
-            console.log(activity)
+/*
+        Activity.create({ name: 'test' }).then((activity) => {
+            console.log(activity.id, activity, activity.events)
+            Event.create({ activity: activity }).then((event) => {
+                console.log(event, event.activity.name)
+            })
+        })
+*/
+        Activity.findAll().then((activities) => {
+            $scope.activities = activities
+        })
+        Term.findAll().then((terms) => {
+            $scope.terms = terms
+        });
+        Event.findAll({}, { with: ['activity'] }).then((events) => {
+            $scope.events = events
         })
 
         this.conditionalAdd = function(event) {
@@ -80,6 +100,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
                     clickOutsideToClose: true,
                     fullscreen: true // Only for -xs, -sm breakpoints.
                 })
+                .then((activity) => {
+                    Activity.findAll().then((activities) => {
+                        $scope.activities = activities
+                    })
+                })
                 break
             case 1:
                 $mdDialog.show({
@@ -89,6 +114,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
                     targetEvent: event,
                     clickOutsideToClose: true,
                     fullscreen: true
+                })
+                .then((term) => {
+                    Term.findAll().then((terms) => {
+                        $scope.terms = terms
+                    })
                 })
                 break
             case 2:
@@ -132,20 +162,21 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
             var now = new Date().toISOString()
             activity.lastEvent = now
             var data = {
-                source_id: activity.id,
+                activity: activity,
                 time: now,
             }
-            console.log(data)
-            Event.create(data).then((s) => {
-                console.log('p', s, Event.find(s.id, { with: ['activity']}))
+            Event.create(data).then((event) => {
+                event.save() // source_id not =serialized
+                Event.findAll({}, { with: ['activity'] }).then((events) => {
+                    $scope.events = events
+                    $scope.selectedTab = 2
+                })
             })
-
-            $scope.selectedTab = 2
         }
         
         this.moodSelected = function(term) {
             $mdDialog.show({
-                controller: RecordController,
+                controller: 'RecordController as ctrl',
                 templateUrl: 'recordMood.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
@@ -177,7 +208,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
 
         this.returnNew = function() {
             if($scope.name) {
-                $mdDialog.hide(Term.create({ name: $scope.name, color: $scope.color }))
+                Term.create({ name: $scope.name, color: $scope.color }).then((term) => {
+                    $mdDialog.hide(term)
+                })
             }
         }
     })
@@ -216,15 +249,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
                     data['qid'] = $scope.substance.qid.value
                 }
 
-                $mdDialog.hide(
-                    Activity.create(data)
-                    .then(
-                        (s) => {console.log('na', s)},
-                        () => {
-                            console.warn('Failed to save activity')
-                        }
-                    )
-                    
+                Activity.create(data).then(
+                    (activity) => {
+                        $mdDialog.hide(activity)
+                    },
+                    () => {
+                        console.warn('Failed to save activity')
+                    }
                 )
             }
         }
@@ -238,10 +269,14 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'j
         
         this.returnNew = function() {
             var params = {
-                term_id: term.id,
+                term: term,
                 weight: $scope.weight,
                 time: new Date()
             }
-            $mdDialog.hide(Event.create(params))
+            Event.create(params).then((event) => {
+                console.log(event)
+                event.save()
+                $mdDialog.hide(event)
+            })
         }
     })

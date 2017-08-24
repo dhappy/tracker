@@ -75,17 +75,13 @@ humanize-duration@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/humanize-duration/-/humanize-duration-3.10.1.tgz#65b550c0aa095156ecb7c340db44ee0bdf71af4b"
 
-js-data-angular@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/js-data-angular/-/js-data-angular-3.2.1.tgz#dfd3a106f8cc8fc9ab53f890cb740d32bf23a1fd"
+js-data-localstorage@3.0.0-beta2:
+  version "3.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/js-data-localstorage/-/js-data-localstorage-3.0.0-beta.2.tgz#e272161f10c326f866180693be37197eb58bdebb"
 
-js-data-localstorage@2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/js-data-localstorage/-/js-data-localstorage-2.3.2.tgz#cf901ed7535ff62eadad138baefda17413d603c0"
-
-js-data@2.9:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/js-data/-/js-data-2.9.0.tgz#95f5669d50479f300345b93953dbaae81c848565"
+js-data@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/js-data/-/js-data-3.0.1.tgz#84d0c5e3031b7fd645b25db4c6e0aab8911df202"
 
 moment@^2.10.6, moment@^2.18.1:
   version "2.18.1"
