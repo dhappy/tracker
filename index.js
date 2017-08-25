@@ -3,7 +3,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         '$stateProvider',
         '$urlRouterProvider',   
         function($stateProvider, $urlRouterProvider) {
-            console.log('sp')
             $stateProvider
                 .state('home', {
                     url: '/home',
@@ -36,7 +35,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                     name: { type: 'string' },
                     lastEvent: {
                         type: 'string',
-                        get() { return date },
+                        get() {
+                            if(this.events.length === 0) {
+                                return undefined
+                            }
+                            
+                            function compare(a, b) {
+                                return b.time.localeCompare(a.time)
+                            }
+                            var events = this.events.sort(compare)
+                            return this.events[0].time
+                        },
                     },
                 },
             },
@@ -70,6 +79,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                     time: { type: 'string' },
                     activity_id: { type: 'string' },
                     term_id: { type: 'string' },
+                    weight: { type: ['number', 'null'] },
                 }
             },
             relations: {
@@ -88,23 +98,15 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         })
     })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-/*
-        Activity.create({ name: 'test' }).then((activity) => {
-            console.log(activity.id, activity, activity.events)
-            Event.create({ activity: activity }).then((event) => {
-                console.log(event, event.activity.name)
-            })
-        })
-*/
-        Activity.findAll().then((activities) => {
-            console.log(activities)
+
+        Activity.findAll({}, { with: ['events'] })
+        .then((activities) => {
             $scope.activities = activities
         })
         Term.findAll().then((terms) => {
             $scope.terms = terms
         });
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
-            console.log(events)
             $scope.events = events
         })
 
@@ -184,11 +186,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 activity: activity,
                 time: now,
             }
-            console.log(data)
             Event.create(data).then((event) => {
                 event.save() // source_id not =serialized
-                Event.findAll({}, { with: ['activity'] }).then((events) => {
-                    console.log(events)
+                Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
                     $scope.events = events
                     $scope.selectedTab = 2
                 })
@@ -272,8 +272,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
                 Activity.create(data).then(
                     (activity) => {
-                        console.log(activity)
-                        activity.save()
                         $mdDialog.hide(activity)
                     },
                     () => {
@@ -294,7 +292,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             var params = {
                 term: term,
                 weight: $scope.weight,
-                time: new Date()
+                time: new Date().toISOString()
             }
             Event.create(params).then((event) => {
                 event.save()

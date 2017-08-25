@@ -37,43 +37,45 @@
       	  <md-tab label="activities">
       	    <md-content class="md-padding">
       	      <md-list ng-cloak>
-      		<md-list-item class='entry' ng-repeat="activity in activities">
-      		  <md-button ng-click='ctrl.activitySelected(activity)'
-      			     class="md-list-item-content">
-      		    <div class="md-list-item-text" layout="row" layout='center'>
-      		      <span flex>{{activity.name}}</span>
-      		      <timer start-time='activity.lastEvent'>
-                  {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
-                </timer>
-      		    </div>
-      		  </md-button>
-      		</md-list-item>
+            		<md-list-item class='entry' ng-repeat="activity in activities">
+            		  <md-button ng-click='ctrl.activitySelected(activity)'
+            			     class="md-list-item-content">
+            		    <div class="md-list-item-text" layout="row" layout='center'>
+            		      <span flex>{{activity.name}}</span>
+            		      <timer start-time='activity.lastEvent' ng-show='activity.lastEvent'>
+                        {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
+                      </timer>
+            		    </div>
+            		  </md-button>
+            		</md-list-item>
       	      </md-list>
       	    </md-content>
       	  </md-tab>
       	  <md-tab label="mood">
       	    <md-content class="md-padding">
       	      <md-list ng-cloak>
-      		<md-list-item class='entry' ng-repeat="term in terms">
-      		  <md-button ng-click='ctrl.moodSelected(term)'
-      			     class="md-list-item-content">
-      		    <div class="md-list-item-text" layout="row" layout='center'>
-      		      <span flex>{{term.name}}</span>
-      		      <timer start-time='term.lastEvent'>{{days}}:{{hours}}:{{mminutes}}:{{sseconds}}</timer>
-      		    </div>
-      		  </md-button>
-      		</md-list-item>
+            		<md-list-item class='entry' ng-repeat="term in terms">
+            		  <md-button ng-click='ctrl.moodSelected(term)'
+            			     class="md-list-item-content">
+            		    <div class="md-list-item-text" layout="row" layout='center'>
+            		      <span flex>{{term.name}}</span>
+            		      <timer start-time='term.lastEvent'>
+                        {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
+                      </timer>
+            		    </div>
+            		  </md-button>
+            		</md-list-item>
       	      </md-list>
       	    </md-content>
       	  </md-tab>
       	  <md-tab label="events">
       	    <md-content class="md-padding">
       	      <md-list ng-cloak>
-      		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
-            <span ng-show='event.term.name' flex>{{event.term.name}}</span>
-            <span ng-show='event.activity.name' flex>{{event.activity.name}}</span>
-      		  <span>{{display_time(event.time)}}</span>
-      		</md-list-item>
+            		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
+                  <span ng-show='event.term.name' flex>{{event.term.name}}</span>
+                  <span ng-show='event.activity.name' flex>{{event.activity.name}}</span>
+            		  <span>{{display_time(event.time)}}</span>
+            		</md-list-item>
       	      </md-list>
       	    </md-content>
       	  </md-tab>
