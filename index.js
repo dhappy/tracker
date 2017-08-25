@@ -14,7 +14,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         }
     ])
     .factory('store', function() {
-        console.log('store')
         var store = new JSData.DataStore()
         var adapter = new JSDataLocalStorage.LocalStorageAdapter({
             beforeCreate: function(mapper, props, opts) {
@@ -33,10 +32,12 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
         return store.defineMapper('activity', {
             schema: {
                 properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
                     lastEvent: {
                         type: 'string',
-                        get() { return date }
-                    }
+                        get() { return date },
+                    },
                 },
             },
             relations: {
@@ -63,14 +64,20 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     })
     .service('Event', function(store) {
         return store.defineMapper('event', {
+            schema: {
+                properties: {
+                    id: { type: 'string' },
+                    time: { type: 'string' },
+                    activity_id: { type: 'string' },
+                    term_id: { type: 'string' },
+                }
+            },
             relations: {
                 belongsTo: {
                     activity: {
                         localField: 'activity',
                         foreignKey: 'activity_id',
-                    }
-                },
-                belongsTo: {
+                    },
                     term: {
                         localField: 'term',
                         foreignKey: 'term_id',
@@ -89,7 +96,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             })
         })
 */
-        Activity.findAll({}, { with: ['lastEvent'] }).then((activities) => {
+        Activity.findAll().then((activities) => {
             console.log(activities)
             $scope.activities = activities
         })
@@ -97,6 +104,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             $scope.terms = terms
         });
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
+            console.log(events)
             $scope.events = events
         })
 
@@ -176,9 +184,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 activity: activity,
                 time: now,
             }
+            console.log(data)
             Event.create(data).then((event) => {
                 event.save() // source_id not =serialized
                 Event.findAll({}, { with: ['activity'] }).then((events) => {
+                    console.log(events)
                     $scope.events = events
                     $scope.selectedTab = 2
                 })
@@ -262,6 +272,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
 
                 Activity.create(data).then(
                     (activity) => {
+                        console.log(activity)
+                        activity.save()
                         $mdDialog.hide(activity)
                     },
                     () => {
