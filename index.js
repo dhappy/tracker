@@ -150,6 +150,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 .then((activity) => {
                     Activity.findAll().then((activities) => {
                         $scope.activities = activities
+                        $scope.$apply()
                     })
                 })
                 break
@@ -189,6 +190,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             .then((activity) => {
                 Activity.findAll().then((activities) => {
                     $scope.activities = activities
+                })
+                Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
+                    $scope.events = events
                 })
             })
         }
@@ -353,7 +357,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
 
         this.delete = () => {
             elem.destroy()
-            Event.destroyAll({ where: { activity_id: { '==': elem.id } } })
-            $mdDialog.hide()
+            Event.destroyAll({ where: { activity_id: { '==': elem.id } } }).then(() => {
+                $mdDialog.hide()
+            })
         }
     })
