@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
+angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress'])
     .config([
         '$stateProvider',
         '$urlRouterProvider',   
@@ -33,13 +33,14 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 properties: {
                     id: { type: 'string' },
                     name: { type: 'string' },
+                    color: { type: 'string' },
                     lastEvent: {
                         type: 'string',
                         get() {
                             if(this.events.length === 0) {
                                 return undefined
                             }
-                            
+
                             function compare(a, b) {
                                 return b.time.localeCompare(a.time)
                             }
@@ -61,6 +62,27 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     })
     .service('Term', function(store) {
         return store.defineMapper('term', {
+            schema: {
+                properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    color: { type: 'string' },
+                    lastEvent: {
+                        type: 'string',
+                        get() {
+                            if(this.events.length === 0) {
+                                return undefined
+                            }
+
+                            function compare(a, b) {
+                                return b.time.localeCompare(a.time)
+                            }
+                            var events = this.events.sort(compare)
+                            return this.events[0].time
+                        },
+                    },
+                },
+            },
             relations: {
                 hasMany: {
                     event: {
@@ -80,6 +102,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                     activity_id: { type: 'string' },
                     term_id: { type: 'string' },
                     weight: { type: ['number', 'null'] },
+                    display_time: {
+                        get() {
+                            return moment(this.time).format('H:mm:ss')
+                        }
+                    },
                 }
             },
             relations: {
@@ -99,11 +126,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
     })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
 
-        Activity.findAll({}, { with: ['events'] })
-        .then((activities) => {
+        Activity.findAll({}, { with: ['events'] }).then((activities) => {
             $scope.activities = activities
         })
-        Term.findAll().then((terms) => {
+        Term.findAll({}, { with: ['events'] }).then((terms) => {
             $scope.terms = terms
         });
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
@@ -145,37 +171,53 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
             case 2:
                 break
             }
+        }
 
-            $scope.display_time = function(time) {
-                return moment(time).format('H:mm:ss')
-            }
-            
-            $scope.labels = ["January", "February", "March", "April",
-                             "May", "June", "July"]
-            $scope.series = ['Series A', 'Series B']
-            $scope.data = [
-                [65, 59, 80, 81, 56, 55, 40],
-                [28, 48, 40, 25, 86, 27, 90]
-            ]
-            $scope.datasetOverride = [{ yAxisID: 'y-axis-1' },
-                                      { yAxisID: 'y-axis-2' }]
-            $scope.options = {
-                scales: {
-                    yAxes: [
-                        {
-                            id: 'y-axis-1',
-                            type: 'linear',
-                            display: true,
-                            position: 'left'
-                        },
-                        {
-                            id: 'y-axis-2',
-                            type: 'linear',
-                            display: true,
-                            position: 'right'
-                        }
-                    ]
+        this.activityOptions = function(activity) {
+            console.log('lp')
+            $mdDialog.show({
+                controller: 'OptionsController as ctrl',
+                templateUrl: 'options.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                fullscreen: true,
+                locals: {
+                    elem: activity
                 }
+            })
+            .then((activity) => {
+                Activity.findAll().then((activities) => {
+                    $scope.activities = activities
+                })
+            })
+        }
+            
+        $scope.labels = ["January", "February", "March", "April",
+                         "May", "June", "July"]
+        $scope.series = ['Series A', 'Series B']
+        $scope.data = [
+            [65, 59, 80, 81, 56, 55, 40],
+            [28, 48, 40, 25, 86, 27, 90]
+        ]
+        $scope.datasetOverride = [{ yAxisID: 'y-axis-1' },
+                                  { yAxisID: 'y-axis-2' }]
+        $scope.options = {
+            scales: {
+                yAxes: [
+                    {
+                        id: 'y-axis-1',
+                        type: 'linear',
+                        display: true,
+                        position: 'left'
+                    },
+                    {
+                        id: 'y-axis-2',
+                        type: 'linear',
+                        display: true,
+                        position: 'right'
+                    }
+                ]
             }
         }
 
@@ -298,5 +340,20 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer'])
                 event.save()
                 $mdDialog.hide(event)
             })
+        }
+    })
+    .controller('OptionsController', function($scope, $controller, $mdDialog, elem, Event) {
+        $controller('DialogController', { $scope: $scope })
+
+        $scope.name = elem.name
+
+        this.edit = () => {
+            
+        }
+
+        this.delete = () => {
+            elem.destroy()
+            Event.destroyAll({ where: { activity_id: { '==': elem.id } } })
+            $mdDialog.hide()
         }
     })

@@ -39,10 +39,12 @@
       	      <md-list ng-cloak>
             		<md-list-item class='entry' ng-repeat="activity in activities">
             		  <md-button ng-click='ctrl.activitySelected(activity)'
-            			     class="md-list-item-content">
+            			 class="md-list-item-content"
+                   on-long-press='ctrl.activityOptions(activity)'>
             		    <div class="md-list-item-text" layout="row" layout='center'>
             		      <span flex>{{activity.name}}</span>
-            		      <timer start-time='activity.lastEvent' ng-show='activity.lastEvent'>
+            		      <timer start-time='activity.lastEvent'
+                       ng-show='activity.lastEvent'>
                         {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
                       </timer>
             		    </div>
@@ -74,7 +76,7 @@
             		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
                   <span ng-show='event.term.name' flex>{{event.term.name}}</span>
                   <span ng-show='event.activity.name' flex>{{event.activity.name}}</span>
-            		  <span>{{display_time(event.time)}}</span>
+            		  <span>{{event.display_time}}</span>
             		</md-list-item>
       	      </md-list>
       	    </md-content>
@@ -208,7 +210,36 @@
       </md-dialog>
     </script>
 
-    <script type="text/ng-template" id="addEvent.html">
+    <script type="text/ng-template" id="options.html">
+      <md-dialog aria-label="Options">
+        <form ng-cloak>
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>Options</h2>
+              <span flex></span>
+              <md-button class="md-icon-button" ng-click="cancel()"
+                aria-label="Close Dialog">
+                <i class="material-icons">close</i>
+              </md-button>
+            </div>
+          </md-toolbar>
+
+          <md-dialog-content>
+            <h1>{{name}}</h1>
+            <md-input-container>
+              <md-button ng-click='ctrl.edit()'>Edit</md-button>
+            </md-input-container>
+            <md-input-container>
+              <md-button ng-click='ctrl.delete()'>Delete</md-button>
+            </md-input-container>
+            <md-dialog-actions layout="row">
+              <span flex></span>
+              <md-button ng-click="cancel()">Cancel</md-button>
+              <md-button ng-click="ctrl.returnNew()">Record</md-button>
+            </md-dialog-actions>
+          </md-dialog-content>
+        </form>
+      </md-dialog>
     </script>
 
     <script src='node_modules/angular/angular.js' type='application/javascript'></script>
@@ -223,6 +254,7 @@
     <script src='node_modules/angular-chart.js/dist/angular-chart.min.js'></script>
     <script src='node_modules/js-data/dist/js-data.js'></script>
     <script src='node_modules/js-data-localstorage/dist/js-data-localstorage.js'></script>
+    <script src='node_modules/angular-long-press/dist/angular-long-press.min.js'></script>
     <script src='index.js'></script>  
   </body>
 </html>

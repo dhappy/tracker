@@ -21,6 +21,10 @@ angular-chart.js@^1.1.1:
     angular "1.x"
     chart.js "2.3.x"
 
+angular-long-press@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/angular-long-press/-/angular-long-press-0.3.2.tgz#e86eef1d01eb13470fb8ef534c71eefb4ead247d"
+
 angular-material@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/angular-material/-/angular-material-1.1.4.tgz#27de35646f54ccd320080af0c708e1b438af87f6"
