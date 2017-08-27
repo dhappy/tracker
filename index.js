@@ -9,6 +9,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                     templateUrl: 'home.html',
                     controller: 'HomeController as ctrl'
                 })
+                .state('settings', {
+                    url: '/settings',
+                    templateUrl: 'settings.html',
+                    controller: 'SettingsController as ctrl'
+                })
             $urlRouterProvider.otherwise('home')
         }
     ])
@@ -361,4 +366,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 $mdDialog.hide()
             })
         }
+    })
+    .controller('SettingsController', function($scope) {
     })

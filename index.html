@@ -29,7 +29,7 @@
              ng-click='ctrl.conditionalAdd()'>
       	      <i class="material-icons">add</i>
       	    </md-button>
-      	    <md-button class="md-fab md-mini" aria-label="Settings" ng-click='ctrl.settings()'>
+      	    <md-button class="md-fab md-mini" aria-label="Settings" ui-sref='settings'>
       	      <i class="material-icons">settings</i>
       	    </md-button>
       	  </div>
@@ -243,6 +243,26 @@
               <md-button ng-click="cancel()">Cancel</md-button>
               <md-button ng-click="ctrl.returnNew()">Record</md-button>
             </md-dialog-actions>
+          </md-dialog-content>
+        </form>
+      </md-dialog>
+    </script>
+
+    <script type="text/ng-template" id="settings.html">
+      <md-dialog aria-label="Settings">
+        <form ng-cloak>
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>Settings</h2>
+              <span flex></span>
+              <md-button class="md-icon-button" ng-click="cancel()"
+                aria-label="Close Dialog">
+                <i class="material-icons">close</i>
+              </md-button>
+            </div>
+          </md-toolbar>
+
+          <md-dialog-content>
           </md-dialog-content>
         </form>
       </md-dialog>
