@@ -1,4 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress'])
+angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress', 'mp.colorPicker'])
     .config([
         '$stateProvider',
         '$urlRouterProvider',   

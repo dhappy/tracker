@@ -25,3 +25,7 @@ button .md-list-item-text {
 md-dialog h1 {
     text-align: center;
 }
+
+.angular-color-picker {
+    height: 200px;
+}

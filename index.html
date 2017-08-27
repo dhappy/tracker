@@ -8,6 +8,8 @@
 	  rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	  rel="stylesheet"/>
+    <link href='node_modules/angular-color-picker/angular-color-picker.css'
+    rel="stylesheet"/>
     <link href="index.css" rel="stylesheet"/>
   </head>
   <body ng-app='eventTypes'>
@@ -135,7 +137,8 @@
                 
       	    <md-input-container>	
       	      <label>Color</label>
-      	      <input ng-model="color"/>
+              <input ng-model="color"/>
+              <color-picker ng-model="color" ng-init="color = '#f05a28'"></color-picker>
       	    </md-input-container>
       	    <md-dialog-actions layout="row">
       	      <span flex></span>
@@ -168,7 +171,8 @@
       	    </md-input-container>
       	    <md-input-container>
       	      <label>Color</label>
-      	      <input ng-model="color"/>
+              <input ng-model="color"/>
+      	      <color-picker ng-model="color"></color-picker>
       	    </md-input-container>
       	    <md-dialog-actions layout="row">
       	      <span flex></span>
@@ -257,6 +261,7 @@
     <script src='node_modules/js-data/dist/js-data.js'></script>
     <script src='node_modules/js-data-localstorage/dist/js-data-localstorage.js'></script>
     <script src='node_modules/angular-long-press/dist/angular-long-press.min.js'></script>
+    <script src='node_modules/angular-color-picker/angular-color-picker.js'></script>
     <script src='index.js'></script>  
   </body>
 </html>
