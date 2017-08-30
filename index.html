@@ -118,13 +118,13 @@
 
       	  <md-dialog-content>
       	    <md-autocomplete
-              md-selected-item="substance"
-              md-search-text="name"
-              md-items="item in ctrl.querySearch(name)"
-              md-item-text="item.name.value"
-              md-min-length="1"
-              md-floating-label="Name"
-              required>
+             md-selected-item="substance"
+             md-search-text="name"
+             md-items="item in ctrl.querySearch(name)"
+             md-item-text="item.name.value"
+             md-min-length="1"
+             md-floating-label="Name"
+             required>
               <md-item-template>
                 <span md-highlight-text="name" md-highlight-flags="^i">
                   {{item.name.value}}

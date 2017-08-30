@@ -202,8 +202,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             })
         }
             
-        $scope.labels = ["January", "February", "March", "April",
-                         "May", "June", "July"]
+        $scope.labels = []
+
+        for(var i = 0; i < 24; i++) {
+            $scope.labels.push(`${i}:00`)
+        }
+        console.log($scope.labels)
+
         $scope.series = ['Series A', 'Series B']
         $scope.data = [
             [65, 59, 80, 81, 56, 55, 40],
@@ -218,7 +223,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                         id: 'y-axis-1',
                         type: 'linear',
                         display: true,
-                        position: 'left'
+                        position: 'left',
+                        min: -100,
+                        max: 100,
                     },
                     {
                         id: 'y-axis-2',
