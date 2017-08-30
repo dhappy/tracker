@@ -96,7 +96,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                     }
                 }
             }
-        })   
+        })
     })
     .service('Event', function(store) {
         return store.defineMapper('event', {
@@ -107,6 +107,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                     activity_id: { type: 'string' },
                     term_id: { type: 'string' },
                     weight: { type: ['number', 'null'] },
+                    source: {
+                        get() {
+                            return this.activity || this.term
+                        }
+                    },
                     display_time: {
                         get() {
                             return moment(this.time).format('H:mm:ss')
@@ -136,9 +141,16 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         })
         Term.findAll({}, { with: ['events'] }).then((terms) => {
             $scope.terms = terms
-        });
+        })
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
             $scope.events = events
+
+            groupByDay(events).forEach((events) => {
+                var descriptors = events.map((event) => {
+                    event.source.name
+                })
+                console.log(descriptors)
+            })
         })
 
         this.conditionalAdd = function(event) {
@@ -201,13 +213,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 })
             })
         }
-            
+
+
         $scope.labels = []
 
         for(var i = 0; i < 24; i++) {
             $scope.labels.push(`${i}:00`)
         }
-        console.log($scope.labels)
 
         $scope.series = ['Series A', 'Series B']
         $scope.data = [
@@ -271,6 +283,15 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             },
                 function() {}
             )
+        }
+
+        function groupByDay(events) {
+            return events.reduce((ret, event) => {
+                var day = event.time.getTime() / 1000 / 60 / 60
+                console.log(day)
+                (rv[day] = rv[day] || []).push(event)
+                return ret
+            }, {})
         }
     })
     .controller('DialogController', function($scope, $mdDialog) {
