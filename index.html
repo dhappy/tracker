@@ -29,21 +29,24 @@
              ng-click='ctrl.conditionalAdd()'>
       	      <i class="material-icons">add</i>
       	    </md-button>
-      	    <md-button class="md-fab md-mini" aria-label="Settings" ui-sref='settings'>
+      	    <md-button class="md-fab md-mini" aria-label="Settings"
+             ui-sref='settings'>
       	      <i class="material-icons">settings</i>
       	    </md-button>
       	  </div>
       	</md-toolbar>
       	
-      	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab" md-swipe-content>
+      	<md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab"
+         md-swipe-content>
       	  <md-tab label="activities">
       	    <md-content class="md-padding">
       	      <md-list ng-cloak>
-            		<md-list-item class='entry' ng-repeat="activity in activities">
+            		<md-list-item class='entry'
+                 ng-repeat="activity in activities">
             		  <md-button ng-click='ctrl.activitySelected(activity)'
             			 class="md-list-item-content"
                    on-long-press='ctrl.activityOptions(activity)'>
-            		    <div class="md-list-item-text" layout="row" layout='center'>
+            		    <div class="md-list-item-text" layout="row">
             		      <span flex>{{activity.name}}</span>
             		      <timer start-time='activity.lastEvent'
                        ng-show='activity.lastEvent'>
@@ -58,30 +61,26 @@
       	  <md-tab label="mood">
       	    <md-content class="md-padding">
       	      <md-list ng-cloak>
-            		<md-list-item class='entry' ng-repeat="term in terms">
-            		  <md-button ng-click='ctrl.moodSelected(term)'
-            			     class="md-list-item-content">
-            		    <div class="md-list-item-text" layout="row" layout='center'>
-            		      <span flex>{{term.name}}</span>
-            		      <timer start-time='term.lastEvent'>
-                        {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
-                      </timer>
-            		    </div>
-            		  </md-button>
             		</md-list-item>
       	      </md-list>
       	    </md-content>
       	  </md-tab>
       	  <md-tab label="events">
       	    <md-content class="md-padding">
-      	      <md-list ng-cloak>
-            		<md-list-item class='entry' ng-repeat="event in events | orderBy: '-time'">
-                  <span ng-show='event.term.name' flex>{{event.term.name}}</span>
-                  <span ng-show='event.activity.name' flex>{{event.activity.name}}</span>
-            		  <span>{{event.display_time}}</span>
-            		</md-list-item>
-      	      </md-list>
-      	    </md-content>
+              <section
+               ng-repeat="day in eventsByDay | orderBy: '-display_text'">
+                <md-subheader class="md-primary">
+                  {{day.display_text}}
+                </md-subheader>
+                <md-list layout-padding>
+              		<md-list-item
+                   ng-repeat="event in day.events | orderBy: '-time'">
+                    <span flex>{{event.source.name}}</span>
+              		  <span>{{event.display_time}}</span>
+              		</md-list-item>
+        	      </md-list>
+              </section>
+       	    </md-content>
       	  </md-tab>
       	  <md-tab label="goals">
       	    <md-content class="md-padding">
@@ -90,11 +89,11 @@
       	  </md-tab>
       	  <md-tab label="stats">
       	    <md-content class="md-padding">
-      	      <canvas id="line" class="chart chart-line" chart-data="data"
-      		      chart-labels="labels" chart-series="series"
-      		      chart-options="options"
-      		      chart-dataset-override="datasetOverride"
-      		      chart-click="onClick">
+      	      <canvas id="line" class="chart chart-line"
+               chart-data="data"
+      		     chart-labels="labels" chart-series="series"
+      		     chart-options="options"
+      		     chart-dataset-override="datasetOverride">
           		</canvas>
       	    </md-content>
       	  </md-tab>

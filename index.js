@@ -145,12 +145,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
             $scope.events = events
 
-            groupByDay(events).forEach((events) => {
-                var descriptors = events.map((event) => {
-                    event.source.name
-                })
-                console.log(descriptors)
-            })
+            $scope.eventsByDay = groupByDay(events)
+
+            console.log($scope.eventsByDay)
         })
 
         this.conditionalAdd = function(event) {
@@ -286,12 +283,20 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         }
 
         function groupByDay(events) {
-            return events.reduce((ret, event) => {
-                var day = event.time.getTime() / 1000 / 60 / 60
-                console.log(day)
-                (rv[day] = rv[day] || []).push(event)
+            var byDay = events.reduce((ret, event) => {
+                var day = moment(event.time).startOf('day').format()
+                ;(ret[day] = ret[day] || []).push(event)
                 return ret
             }, {})
+            var out = []
+            for(date in byDay) {
+                out.push({
+                    display_text: date,
+                    events: byDay[date],
+                })
+            }
+            console.log(out)
+            return out
         }
     })
     .controller('DialogController', function($scope, $mdDialog) {
@@ -326,7 +331,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                         + '  ?item wdt:P31/wdt:P279* wd:Q8386.'
                         + '  ?item rdfs:label ?name.'
                         + '  FILTER(LANG(?name) = "en")'
-                        + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
+                            + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
                         + '} LIMIT 15'
                     var url = `https://query.wikidata.org/sparql?query=${query}`
                     $http.get(url).then(function(result) {
