@@ -144,10 +144,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         })
         Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
             $scope.events = events
-
             $scope.eventsByDay = groupByDay(events)
-
-            console.log($scope.eventsByDay)
         })
 
         this.conditionalAdd = function(event) {
@@ -207,6 +204,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 })
                 Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
                     $scope.events = events
+                    $scope.eventsByDay = groupByDay(events)
                 })
             })
         }
@@ -295,7 +293,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                     events: byDay[date],
                 })
             }
-            console.log(out)
             return out
         }
     })
