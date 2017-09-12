@@ -186,7 +186,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         }
 
         this.activityOptions = function(activity) {
-            console.log('lp')
             $mdDialog.show({
                 controller: 'OptionsController as ctrl',
                 templateUrl: 'options.html',
@@ -273,8 +272,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 }
             })
             .then(function(value) {
-                $scope.events.push(value)
-                $scope.selectedTab = 2
+                Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
+                    $scope.events = events
+                    $scope.selectedTab = 2
+                })
             },
                 function() {}
             )
@@ -328,7 +329,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                         + '  ?item wdt:P31/wdt:P279* wd:Q8386.'
                         + '  ?item rdfs:label ?name.'
                         + '  FILTER(LANG(?name) = "en")'
-                            + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
+                        + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
                         + '} LIMIT 15'
                     var url = `https://query.wikidata.org/sparql?query=${query}`
                     $http.get(url).then(function(result) {
