@@ -156,7 +156,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                     parent: angular.element(document.body),
                     targetEvent: event,
                     clickOutsideToClose: true,
-                    fullscreen: true // Only for -xs, -sm breakpoints.
+                    fullscreen: true, // Only for -xs, -sm breakpoints.
+                    locals: {
+                        activity: undefined
+                    },
                 })
                 .then((activity) => {
                     Activity.findAll().then((activities) => {
@@ -254,6 +257,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 event.save() // source_id not =serialized
                 Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
                     $scope.events = events
+                    $scope.eventsByDay = groupByDay(events)
                     $scope.selectedTab = 2
                 })
             })
@@ -274,6 +278,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             .then(function(value) {
                 Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
                     $scope.events = events
+                    $scope.eventsByDay = groupByDay(events)
                     $scope.selectedTab = 2
                 })
             },
@@ -317,8 +322,16 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             }
         }
     })
-    .controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http) {
+    .controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http, activity) {
         $controller('DialogController', { $scope: $scope })
+
+        if(activity) {
+            $scope.name = activity.name
+            $scope.color = activity.color
+            $scope.function = 'Save'
+        } else {
+            $scope.function = 'Create'
+        }
 
         this.querySearch = function(text) {
             return new Promise(function(resolve, reject) {
@@ -388,7 +401,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         $scope.name = elem.name
 
         this.edit = () => {
-            
+            $mdDialog.show({
+                controller: 'SubstanceController as ctrl',
+                templateUrl: 'addActivity.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                fullscreen: true, // Only for -xs, -sm breakpoints.
+                locals: {
+                    activity: elem
+                },
+            })
         }
 
         this.delete = () => {
