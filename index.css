@@ -29,3 +29,7 @@ md-dialog h1 {
 .angular-color-picker {
     height: 200px;
 }
+
+#line {
+    height: 150px !important;
+}

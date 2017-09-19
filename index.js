@@ -135,7 +135,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         })
     })
     .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-
         Activity.findAll({}, { with: ['events'] }).then((activities) => {
             $scope.activities = activities
         })
@@ -152,7 +151,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             case 0:
                 $mdDialog.show({
                     controller: 'SubstanceController as ctrl',
-                    templateUrl: 'addActivity.html',
+                    templateUrl: 'activity.html',
                     parent: angular.element(document.body),
                     targetEvent: event,
                     clickOutsideToClose: true,
@@ -215,7 +214,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         $scope.labels = []
 
         for(var i = 0; i < 24; i++) {
-            $scope.labels.push(`${i}:00`)
+            $scope.labels.push(i)
         }
 
         $scope.series = ['Series A', 'Series B']
@@ -226,7 +225,23 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         $scope.datasetOverride = [{ yAxisID: 'y-axis-1' },
                                   { yAxisID: 'y-axis-2' }]
         $scope.options = {
+            responsive: true, 
+            maintainAspectRatio: false,
             scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    ticks: {
+                        callback: function(value, index, values) {
+                          return `${value}:00`
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 24,
+                        stepSize: 1,
+                    },
+                    min: 0,
+                    max: 23,
+                }],
                 yAxes: [
                     {
                         id: 'y-axis-1',
@@ -240,7 +255,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                         id: 'y-axis-2',
                         type: 'linear',
                         display: true,
-                        position: 'right'
+                        position: 'right',
+                        min: -100,
+                        max: 100,
                     }
                 ]
             }
@@ -328,6 +345,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         if(activity) {
             $scope.name = activity.name
             $scope.color = activity.color
+            $scope.activity = activity
             $scope.function = 'Save'
         } else {
             $scope.function = 'Create'
@@ -354,25 +372,33 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                 })
         }
 
-        this.returnNew = function() {
-            if($scope.name) {
-                var data = {
-                    name: $scope.name,
-                    color: $scope.color,
-                }
-
-                if($scope.substance) {
-                    data['qid'] = $scope.substance.qid.value
-                }
-
-                Activity.create(data).then(
-                    (activity) => {
-                        $mdDialog.hide(activity)
-                    },
-                    () => {
-                        console.warn('Failed to save activity')
+        this.processReturn = function(activity) {
+            if(activity) {
+                activity.name = $scope.name
+                activity.color = $scope.color
+                activity.save()
+                console.log(activity)
+                $mdDialog.hide(activity)
+            } else {
+                if($scope.name) {
+                    var data = {
+                        name: $scope.name,
+                        color: $scope.color,
                     }
-                )
+
+                    if($scope.substance) {
+                        data['qid'] = $scope.substance.qid.value
+                    }
+
+                    Activity.create(data).then(
+                        (activity) => {
+                            $mdDialog.hide(activity)
+                        },
+                        () => {
+                            console.warn('Failed to save activity')
+                        }
+                    )
+                }
             }
         }
     })
@@ -403,7 +429,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         this.edit = () => {
             $mdDialog.show({
                 controller: 'SubstanceController as ctrl',
-                templateUrl: 'addActivity.html',
+                templateUrl: 'activity.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
