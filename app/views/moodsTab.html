@@ -1,0 +1,17 @@
+<md-content class="md-padding">
+  <md-list ng-cloak>
+    <md-list-item class='entry' ng-repeat="term in terms">
+      <md-button ng-click='ctrl.moodSelected(term)'
+       class="md-list-item-content"
+       on-long-press='ctrl.termOptions(term)'>
+        <div class="md-list-item-text" layout="row">
+          <span flex>{{term.name}}</span>
+          <timer start-time='term.lastEvent'
+           ng-show='term.lastEvent'>
+            {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
+          </timer>
+        </div>
+      </md-button>
+    </md-list-item>
+  </md-list>
+</md-content>

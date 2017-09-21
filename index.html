@@ -33,99 +33,15 @@
       
       <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTab"
        ng-init='selectedTab = 0' md-swipe-content>
-        <md-tab label="activities"></md-tab>
-        <md-tab label="moods"></md-tab>
-        <md-tab label="events"></md-tab>
-        <md-tab label="goals"></md-tab>
-        <md-tab label="stats"></md-tab>
+        <md-tab label="activities" ui-sref='activities'></md-tab>
+        <md-tab label="moods" ui-sref='moods'></md-tab>
+        <md-tab label="events" ui-sref='events'></md-tab>
+        <md-tab label="goals" ui-sref='goals'></md-tab>
+        <md-tab label="stats" ui-sref='stats'></md-tab>
       </md-tabs>
 
       <div id="content" ui-view flex> </div>
-
-      <!--ui-view></ui-view>-->
-      <script type="text/ng-template" id="activitiesTab.html">
-        <md-content class="md-padding">
-          <md-list ng-cloak>
-            <md-list-item class='entry'
-             ng-repeat="activity in activities">
-              <md-button ng-click='ctrl.activitySelected(activity)'
-               class="md-list-item-content"
-               on-long-press='ctrl.activityOptions(activity)'>
-                <div class="md-list-item-text" layout="row">
-                  <span flex>{{activity.name}}</span>
-                  <timer start-time='activity.lastEvent'
-                   ng-show='activity.lastEvent'>
-                    {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
-                  </timer>
-                </div>
-              </md-button>
-            </md-list-item>
-          </md-list>
-        </md-content>
-      </script>
-    </md-content>
-
-      <script type="text/ng-template" id="moodsTab.html">
-        <md-content class="md-padding">
-          <md-list ng-cloak>
-            <md-list-item class='entry' ng-repeat="term in terms">
-              <md-button ng-click='ctrl.moodSelected(term)'
-               class="md-list-item-content"
-               on-long-press='ctrl.termOptions(term)'>
-                <div class="md-list-item-text" layout="row">
-                  <span flex>{{term.name}}</span>
-                  <timer start-time='term.lastEvent'
-                   ng-show='term.lastEvent'>
-                    {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
-                  </timer>
-                </div>
-              </md-button>
-            </md-list-item>
-          </md-list>
-        </md-content>
-      </script>
-
-      <script type="text/ng-template" id="eventsTab.html">
-        <md-content class="md-padding">
-          <section
-           ng-repeat="day in eventsByDay | orderBy: '-display_text'">
-            <md-subheader class="md-primary">
-              {{day.display_text}}
-            </md-subheader>
-            <md-list ng-cloak>
-              <md-list-item
-               ng-repeat="event in day.events | orderBy: '-time'">
-                <md-button ng-click='ctrl.eventSelected(event)'
-                 class="md-list-item-content"
-                 on-long-press='ctrl.eventOptions(event)'>
-                  <div class="md-list-item-text" layout="row">
-                    <span flex>{{event.source.name}}</span>
-                    <span>{{event.display_time}}</span>
-                  </div>
-                </md-button>
-              </md-list-item>
-            </md-list>
-          </section>
-        </md-content>
-      </script>
-
-      <script type="text/ng-template" id="goalsTab.html">
-        <md-content class="md-padding">
-          <h1 class="md-display-2">Goals</h1>
-        </md-content>
-      </script>
     </div>
-
-    <script type="text/ng-template" id="statsTab.html">
-      <md-content class="md-padding">
-        <canvas id="line" class="chart chart-line"
-         chart-data="data"
-         chart-labels="labels" chart-series="series"
-         chart-options="options"
-         chart-dataset-override="datasetOverride">
-        </canvas>
-      </md-content>
-    </script>
 
     <script type="text/ng-template" id="activity.html">
       <md-dialog aria-label="{{function}} Activity">
