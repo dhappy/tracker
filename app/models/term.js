@@ -1,14 +1,14 @@
-app.service('Activity', function(store) {
-  return store.defineMapper('activity', {
+app.service('Term', function(store) {
+  return store.defineMapper('term', {
     schema: {
       properties: {
         id: { type: 'string' },
         name: { type: 'string' },
-        color: { type: 'string' },
         type: {
           type: 'string',
-          get() { return 'activity' },
+          get() { return 'term' },
         },
+        color: { type: 'string' },
         lastEvent: {
           type: 'string',
           get() {
@@ -28,9 +28,9 @@ app.service('Activity', function(store) {
       hasMany: {
         event: {
           localField: 'events',
-          foreignKey: 'activity_id',
-        }
-      }
+          foreignKey: 'term_id',
+        },
+      },
     }
   })
 })

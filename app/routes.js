@@ -1,21 +1,43 @@
+var app =
 angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress', 'mp.colorPicker'])
-.config([
-  '$stateProvider',
-  '$urlRouterProvider',   
+.config(['$stateProvider', '$urlRouterProvider',   
   ($stateProvider, $urlRouterProvider) => {
     $stateProvider
     .state('activities', {
       url: "/activities",
       templateUrl: "app/views/activitiesTab.html",
+      data: { tabIndex: 0 },
       controller: 'ActivitiesTabController as ctrl',
     })
-    .state('moodsTab', {
+    .state('moods', {
       url: "/moods",
       templateUrl: "app/views/moodsTab.html",
+      data: { tabIndex: 1 },
+      controller: 'MoodsTabController as ctrl',
+    })
+    .state('events', {
+      url: "/events",
+      templateUrl: "eventsTab.html",
+      data: { tabIndex: 2 },
+      controller: 'EventsTabController as ctrl',
+    })
+    .state('goals', {
+      url: "/goals",
+      templateUrl: "goalsTab.html",
+      data: { tabIndex: 3 },
+      controller: 'GoalsTabController as ctrl',
+    })
+    .state('stats', {
+      url: "/stats",
+      templateUrl: "statsTab.html",
+      data: { tabIndex: 4 },
+      controller: 'StatsTabController as ctrl',
     })
     .state('eventsTab', {
       url: "/events",
       templateUrl: "eventsTab.html",
+      data: { tabIndex: 2 },
+      controller: 'EventsTabController as ctrl',
     })
     .state('settings', {
       url: '/settings',
@@ -25,4 +47,3 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     $urlRouterProvider.otherwise('activitiesTab')
   }
 ])
-  

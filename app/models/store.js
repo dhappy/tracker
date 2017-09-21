@@ -1,5 +1,4 @@
-angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress', 'mp.colorPicker'])
-.factory('store', () => {
+app.factory('store', () => {
   var store = new JSData.DataStore()
   var adapter = new JSDataLocalStorage.LocalStorageAdapter({
     beforeCreate: function(mapper, props, opts) {
