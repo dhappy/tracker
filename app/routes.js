@@ -25,3 +25,4 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     $urlRouterProvider.otherwise('activitiesTab')
   }
 ])
+  
