@@ -18,27 +18,21 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     })
     .state('events', {
       url: "/events",
-      templateUrl: "eventsTab.html",
+      templateUrl: "app/views/eventsTab.html",
       data: { tabIndex: 2 },
       controller: 'EventsTabController as ctrl',
     })
     .state('goals', {
       url: "/goals",
-      templateUrl: "goalsTab.html",
+      templateUrl: "app/views/goalsTab.html",
       data: { tabIndex: 3 },
       controller: 'GoalsTabController as ctrl',
     })
     .state('stats', {
       url: "/stats",
-      templateUrl: "statsTab.html",
+      templateUrl: "app/views/statsTab.html",
       data: { tabIndex: 4 },
       controller: 'StatsTabController as ctrl',
-    })
-    .state('eventsTab', {
-      url: "/events",
-      templateUrl: "eventsTab.html",
-      data: { tabIndex: 2 },
-      controller: 'EventsTabController as ctrl',
     })
     .state('settings', {
       url: '/settings',
@@ -48,8 +42,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     $urlRouterProvider.otherwise('activitiesTab')
   }
 ])
-;app.controller('ActivitiesTabController', function() {
-  console.log('h')
+;app.controller('ActivitiesTabController', function($scope, Activity) {
   Activity.findAll({}, { with: ['events'] }).then((activities) => {
     $scope.activities = activities
   })
@@ -280,6 +273,11 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     }
     return out
   }
+})
+;app.controller('MoodsTabController', function($scope, Term) {
+  Term.findAll({}, { with: ['events'] }).then((terms) => {
+    $scope.terms = terms
+  })
 })
 ;app.controller('OptionsController', function($scope, $controller, $mdDialog, elem, Event) {
   $controller('DialogController', { $scope: $scope })

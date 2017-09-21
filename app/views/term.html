@@ -1,0 +1,35 @@
+<md-dialog aria-label="{{function}} Term">
+  <form ng-cloak ui-keypress="{13:'ctrl.processReturn(term)'}">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{function}} Term</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()"'
+         aria-label="Close Dialog">
+          <i class="material-icons">close</i>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <md-input-container>
+        <label>Name</label>
+        <input ng-model="name" md-autofocus required/>
+      </md-input-container>
+      <md-input-container>
+        <label>Color</label>
+        <input ng-model="color"/>
+        <color-picker ng-model="color"
+         ng-init="color = color || '#f05a28'">
+        </color-picker>
+      </md-input-container>
+      <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">Cancel</md-button>
+        <md-button ng-click="ctrl.processReturn(term)">
+          {{function}}
+        </md-button>
+      </md-dialog-actions>
+    </md-dialog-content> 
+  </form>
+</md-dialog>

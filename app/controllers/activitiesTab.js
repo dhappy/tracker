@@ -1,5 +1,4 @@
-app.controller('ActivitiesTabController', function(Activity) {
-  console.log('h')
+app.controller('ActivitiesTabController', function($scope, Activity) {
   Activity.findAll({}, { with: ['events'] }).then((activities) => {
     $scope.activities = activities
   })
