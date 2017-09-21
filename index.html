@@ -6,8 +6,7 @@
 	  <link rel="shortcut icon" href="favicon.png"/>
     <link href="node_modules/angular-material/angular-material.min.css"
 	  rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-	  rel="stylesheet"/>
+    <link href='css/material-icons.css' rel='stylesheet'/>
     <link href='node_modules/angular-color-picker/angular-color-picker.css'
     rel="stylesheet"/>
     <link href="index.css" rel="stylesheet"/>
@@ -63,7 +62,8 @@
       	      <md-list ng-cloak>
                 <md-list-item class='entry' ng-repeat="term in terms">
                   <md-button ng-click='ctrl.moodSelected(term)'
-                   class="md-list-item-content">
+                   class="md-list-item-content"
+                   on-long-press='ctrl.termOptions(term)'>
                     <div class="md-list-item-text" layout="row">
                       <span flex>{{term.name}}</span>
                       <timer start-time='term.lastEvent'
@@ -162,12 +162,12 @@
       </md-dialog>
     </script>
 
-    <script type="text/ng-template" id="addTerm.html">
-      <md-dialog aria-label="Add Term">
+    <script type="text/ng-template" id="term.html">
+      <md-dialog aria-label="{{function}} Term">
       	<form ng-cloak>
       	  <md-toolbar>
       	    <div class="md-toolbar-tools">
-      	      <h2>Add Term</h2>
+      	      <h2>{{function}} Term</h2>
       	      <span flex></span>
       	      <md-button class="md-icon-button" ng-click="cancel()"'
                aria-label="Close Dialog">
@@ -184,12 +184,16 @@
       	    <md-input-container>
       	      <label>Color</label>
               <input ng-model="color"/>
-      	      <color-picker ng-model="color"></color-picker>
+      	      <color-picker ng-model="color"
+               ng-init="color = color || '#f05a28'">
+              </color-picker>
       	    </md-input-container>
       	    <md-dialog-actions layout="row">
       	      <span flex></span>
       	      <md-button ng-click="cancel()">Cancel</md-button>
-      	      <md-button ng-click="ctrl.returnNew()">{{function}}</md-button>
+      	      <md-button ng-click="ctrl.processReturn(term)">
+                {{function}}
+              </md-button>
       	    </md-dialog-actions>
       	  </md-dialog-content> 
       	</form>
@@ -244,16 +248,15 @@
             <h1>{{name}}</h1>
             <md-list ng-cloak>
               <md-list-item>
-                <md-button ng-click='ctrl.edit()'>Edit</md-button>
+                <md-button ng-click='ctrl.edit(elem)'>Edit</md-button>
               </md-list-item>
               <md-list-item>
-                <md-button ng-click='ctrl.delete()'>Delete</md-button>
+                <md-button ng-click='ctrl.delete(elem)'>Delete</md-button>
               </md-list-item>
             </md-list>
             <md-dialog-actions layout="row">
               <span flex></span>
               <md-button ng-click="cancel()">Cancel</md-button>
-              <md-button ng-click="ctrl.returnNew()">Record</md-button>
             </md-dialog-actions>
           </md-dialog-content>
         </form>
