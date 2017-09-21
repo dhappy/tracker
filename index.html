@@ -83,11 +83,17 @@
                 <md-subheader class="md-primary">
                   {{day.display_text}}
                 </md-subheader>
-                <md-list layout-padding>
+                <md-list ng-cloak>
               		<md-list-item
                    ng-repeat="event in day.events | orderBy: '-time'">
-                    <span flex>{{event.source.name}}</span>
-              		  <span>{{event.display_time}}</span>
+                    <md-button ng-click='ctrl.eventSelected(event)'
+                     class="md-list-item-content"
+                     on-long-press='ctrl.eventOptions(event)'>
+                      <div class="md-list-item-text" layout="row">
+                        <span flex>{{event.source.name}}</span>
+                        <span>{{event.display_time}}</span>
+                      </div>
+                    </md-button>
               		</md-list-item>
         	      </md-list>
               </section>
