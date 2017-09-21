@@ -25,7 +25,8 @@
       	    <span flex></span>
 
       	    <md-button class="md-fab md-mini" aria-label="Add"
-             ng-click='ctrl.conditionalAdd()'>
+             ng-click='ctrl.conditionalAdd()'
+             ng-if='selectedTab === 0 || selectedTab === 1'>
       	      <i class="material-icons">add</i>
       	    </md-button>
       	    <md-button class="md-fab md-mini" aria-label="Settings"
@@ -120,7 +121,7 @@
       
     <script type="text/ng-template" id="activity.html">
       <md-dialog aria-label="{{function}} Activity">
-      	<form ng-cloak>
+      	<form ng-cloak ui-keypress="{13:'ctrl.processReturn(activity)'}">
       	  <md-toolbar>
       	    <div class="md-toolbar-tools">
       	      <h2>{{function}} Activity</h2>
@@ -140,6 +141,7 @@
              md-item-text="item.name.value"
              md-min-length="1"
              md-floating-label="Name"
+             md-autofocus
              required>
               <md-item-template>
                 <span md-highlight-text="name" md-highlight-flags="^i">
@@ -161,7 +163,9 @@
       	    <md-dialog-actions layout="row">
       	      <span flex></span>
       	      <md-button ng-click="cancel()">Cancel</md-button>
-      	      <md-button ng-click="ctrl.processReturn(activity)">{{function}}</md-button>
+      	      <md-button ng-click="ctrl.processReturn(activity)">
+                {{function}}
+              </md-button>
       	    </md-dialog-actions>
       	  </md-dialog-content>
       	</form>
@@ -170,7 +174,7 @@
 
     <script type="text/ng-template" id="term.html">
       <md-dialog aria-label="{{function}} Term">
-      	<form ng-cloak>
+      	<form ng-cloak ui-keypress="{13:'ctrl.processReturn(term)'}">
       	  <md-toolbar>
       	    <div class="md-toolbar-tools">
       	      <h2>{{function}} Term</h2>
@@ -185,7 +189,7 @@
       	  <md-dialog-content>
             <md-input-container>
       	      <label>Name</label>
-      	      <input ng-model="name" required/>
+      	      <input ng-model="name" md-autofocus required/>
       	    </md-input-container>
       	    <md-input-container>
       	      <label>Color</label>
@@ -294,6 +298,7 @@
     <script src="node_modules/angular-aria/angular-aria.min.js"></script>
     <script src='node_modules/angular-material/angular-material.js'></script>
     <script src='node_modules/angular-ui-router/release/angular-ui-router.min.js'></script>
+    <script src='node_modules/angular-ui-keypress/modules/keypress/keypress.js'></script>
     <script src='node_modules/humanize-duration/humanize-duration.js'></script>
     <script src='node_modules/moment/moment.js'></script>
     <script src='node_modules/angular-timer/dist/angular-timer.min.js'></script>
