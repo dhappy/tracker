@@ -1,0 +1,18 @@
+<md-content class="md-padding">
+  <md-list ng-cloak>
+    <md-list-item class='entry'
+     ng-repeat="activity in activities">
+      <md-button ng-click='ctrl.activitySelected(activity)'
+       class="md-list-item-content"
+       on-long-press='ctrl.activityOptions(activity)'>
+        <div class="md-list-item-text" layout="row">
+          <span flex>{{activity.name}}</span>
+          <timer start-time='activity.lastEvent'
+           ng-show='activity.lastEvent'>
+            {{days}}:{{hours}}:{{mminutes}}:{{sseconds}}
+          </timer>
+        </div>
+      </md-button>
+    </md-list-item>
+  </md-list>
+</md-content>

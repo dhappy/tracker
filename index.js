@@ -1,22 +1,4 @@
 angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress', 'mp.colorPicker'])
-.config([
-  '$stateProvider',
-  '$urlRouterProvider',   
-  ($stateProvider, $urlRouterProvider) => {
-    $stateProvider
-    .state('home', {
-      url: '/home',
-      templateUrl: 'home.html',
-      controller: 'HomeController as ctrl'
-    })
-    .state('settings', {
-      url: '/settings',
-      templateUrl: 'settings.html',
-      controller: 'SettingsController as ctrl'
-    })
-    $urlRouterProvider.otherwise('home')
-  }
-  ])
 .directive('autofocus', ($timeout) => (
   {
     scope: { trigger: '@autofocus' },
@@ -26,7 +8,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       })
     },
   }
-))
+))  
 .factory('store', () => {
   var store = new JSData.DataStore()
   var adapter = new JSDataLocalStorage.LocalStorageAdapter({
@@ -148,15 +130,26 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   })
 })
 .controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-  Activity.findAll({}, { with: ['events'] }).then((activities) => {
-    $scope.activities = activities
-  })
   Term.findAll({}, { with: ['events'] }).then((terms) => {
     $scope.terms = terms
   })
   Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
     $scope.events = events
     $scope.eventsByDay = groupByDay(events)
+  })
+
+  $scope.$watch('selectedIndex', function(current, old) {
+    switch(current) {
+      case 0:
+        $location.url("/activities")
+        break
+      case 1:
+        $location.url("/moods")
+        break
+      case 2:
+        $location.url("/events");
+        break;
+    }
   })
 
   this.conditionalAdd = function(event) {
