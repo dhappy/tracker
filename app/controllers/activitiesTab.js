@@ -1,6 +1,6 @@
 app.controller('ActivitiesTabController',
-  function($scope/*, Event, EventsUpdater, ActivitiesUpdater, $mdDialog*/) {
-/*    $scope.updater = ActivitiesUpdater
+  function($scope, Event, EventsUpdater, ActivitiesUpdater, $mdDialog, $location) {
+    $scope.updater = ActivitiesUpdater
 
     this.activityOptions = function(activity) {
       $mdDialog.show({
@@ -15,7 +15,7 @@ app.controller('ActivitiesTabController',
         }
       })
       .then(
-        (activity) => { console.log('ff'); ActivitiesUpdater.update() },
+        (activity) => { ActivitiesUpdater.update() },
         () => {}
       )
     }
@@ -27,19 +27,16 @@ app.controller('ActivitiesTabController',
         activity: activity,
         time: now,
       }
+      console.log(data)
       Event.create(data).then(
         (event) => {
-          //event.save() // source_id not serialized
+          event.save() // source_id not serialized
           EventsUpdater.update().then(
-            () => {
-              console.log('hr')
-              $scope.selectedTab = 2
-            },
+            () => { $location.url('/events') },
             () => {}
           )
         }
       )
     }
-*/
   }
 )

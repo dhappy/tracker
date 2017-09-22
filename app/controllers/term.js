@@ -18,9 +18,10 @@ app.controller('TermController', function($scope, $controller, $mdDialog, Term, 
       $mdDialog.hide(term)
     } else {
       if($scope.name) {
-        Term.create({ name: $scope.name, color: $scope.color }).then((term) => {
-          $mdDialog.hide(term)
-        })
+        Term.create({ name: $scope.name, color: $scope.color }).then(
+          (term) => { $mdDialog.hide(term) },
+          () => {}
+        )
       }
     }
   }

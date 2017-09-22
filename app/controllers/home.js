@@ -24,8 +24,10 @@ app.controller('HomeController',
         })
         .then(
           (activity) => { 
-            ActivitiesUpdater.update()
-            console.log(ActivitiesUpdater)
+            ActivitiesUpdater.update().then(
+              () => $scope.$apply(),
+              () => {}
+            )
           },
           () => {}
         )
@@ -43,7 +45,10 @@ app.controller('HomeController',
           },
         })
         .then((term) => {
-          TermsUpdater.update()
+          TermsUpdater.update().then(
+            () => $scope.$apply(),
+            () => {}
+          )
         })
         break
         case 2:

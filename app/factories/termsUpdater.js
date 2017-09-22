@@ -3,8 +3,14 @@ app.factory('TermsUpdater', function(Term) {
     var self = this
 
     self.update = () => {
-      return Term.findAll().then((terms) => {
-        self.terms = terms
+      return new Promise((resolve, reject) => {
+        return Term.findAll().then(
+          (terms) => {
+            self.terms = terms
+            resolve(terms)
+          },
+          () => {}
+        )
       })
     }
     self.update()

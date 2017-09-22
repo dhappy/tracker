@@ -3,9 +3,15 @@ app.factory('ActivitiesUpdater', function(Activity, Event) {
     var self = this
 
     self.update = () => {
-      Activity.findAll({}, { with: ['events'] }).then(
-        (activities) => { self.activities = activities }
-      )
+      return new Promise((resolve, reject) => {
+        Activity.findAll({}, { with: ['events'] }).then(
+          (activities) => {
+            self.activities = activities
+            resolve(activities)
+          },
+          () => { reject() }
+        )
+      })
     }
     self.update()
   }

@@ -43,8 +43,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   }
 ])
 ;app.controller('ActivitiesTabController',
-  function($scope/*, Event, EventsUpdater, ActivitiesUpdater, $mdDialog*/) {
-/*    $scope.updater = ActivitiesUpdater
+  function($scope, Event, EventsUpdater, ActivitiesUpdater, $mdDialog, $location) {
+    $scope.updater = ActivitiesUpdater
 
     this.activityOptions = function(activity) {
       $mdDialog.show({
@@ -59,7 +59,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         }
       })
       .then(
-        (activity) => { console.log('ff'); ActivitiesUpdater.update() },
+        (activity) => { ActivitiesUpdater.update() },
         () => {}
       )
     }
@@ -71,20 +71,17 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         activity: activity,
         time: now,
       }
+      console.log(data)
       Event.create(data).then(
         (event) => {
-          //event.save() // source_id not serialized
+          event.save() // source_id not serialized
           EventsUpdater.update().then(
-            () => {
-              console.log('hr')
-              $scope.selectedTab = 2
-            },
+            () => { $location.url('/events') },
             () => {}
           )
         }
       )
     }
-*/
   }
 )
 ;app.controller('DialogController', function($scope, $mdDialog) {
@@ -122,8 +119,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         })
         .then(
           (activity) => { 
-            ActivitiesUpdater.update()
-            console.log(ActivitiesUpdater)
+            ActivitiesUpdater.update().then(
+              () => $scope.$apply(),
+              () => {}
+            )
           },
           () => {}
         )
@@ -141,7 +140,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
           },
         })
         .then((term) => {
-          TermsUpdater.update()
+          TermsUpdater.update().then(
+            () => $scope.$apply(),
+            () => {}
+          )
         })
         break
         case 2:
@@ -150,47 +152,55 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     }
   }
 )
-;app.controller('MoodsTabController', function($scope, Term) {
-  this.moodSelected = function(term) {
-    $mdDialog.show({
-      controller: 'RecordController as ctrl',
-      templateUrl: 'app/views/recordMood.html',
-      parent: angular.element(document.body),
-      targetEvent: event,
-      clickOutsideToClose: true,
-      fullscreen: true,
-      locals: {
-        term: term
-      }
-    })
-    .then(
-      (value) => {
-        EventsUpdater.update().then(() => { $scope.selectedTab = 2 })
-      },
-      () => {}
-    )
-  }
+;app.controller('MoodsTabController',
+  function($scope, TermsUpdater, EventsUpdater, $mdDialog, $location) {
+    $scope.updater = TermsUpdater
 
-  this.termOptions = function(term) {
-    $mdDialog.show({
-      controller: 'OptionsController as ctrl',
-      templateUrl: 'app/views/options.html',
-      parent: angular.element(document.body),
-      targetEvent: event,
-      clickOutsideToClose: true,
-      fullscreen: true,
-      locals: {
-        elem: term,
-      },
-    })
-    .then(
-      (term) => {
-        TermUpdater.update()
-        EventsUpdater.update()
-      }
-    )
+    this.moodSelected = function(term) {
+      $mdDialog.show({
+        controller: 'RecordController as ctrl',
+        templateUrl: 'app/views/recordMood.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose: true,
+        fullscreen: true,
+        locals: {
+          term: term
+        }
+      })
+      .then(
+        (value) => {
+          EventsUpdater.update().then(
+            () => { $location.url('/events') },
+            () => {}
+          )
+        },
+        () => {}
+      )
+    }
+
+    this.termOptions = function(term) {
+      $mdDialog.show({
+        controller: 'OptionsController as ctrl',
+        templateUrl: 'app/views/options.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose: true,
+        fullscreen: true,
+        locals: {
+          elem: term,
+        },
+      })
+      .then(
+        (term) => {
+          TermsUpdater.update()
+          EventsUpdater.update()
+        },
+        () => {}
+      )
+    }
   }
-})
+)
 ;app.controller('OptionsController', function($scope, $controller, $mdDialog, elem, Event) {
   $controller('DialogController', { $scope: $scope })
 
@@ -201,7 +211,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     if(elem.type === 'activity') {
       $mdDialog.show({
         controller: 'SubstanceController as ctrl',
-        templateUrl: 'activity.html',
+        templateUrl: 'app/views/activity.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
@@ -213,7 +223,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     } else if(elem.type === 'term') {
       $mdDialog.show({
         controller: 'TermController as ctrl',
-        templateUrl: 'term.html',
+        templateUrl: 'app/views/term.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
@@ -394,9 +404,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       $mdDialog.hide(term)
     } else {
       if($scope.name) {
-        Term.create({ name: $scope.name, color: $scope.color }).then((term) => {
-          $mdDialog.hide(term)
-        })
+        Term.create({ name: $scope.name, color: $scope.color }).then(
+          (term) => { $mdDialog.hide(term) },
+          () => {}
+        )
       }
     }
   }
@@ -406,9 +417,15 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     var self = this
 
     self.update = () => {
-      Activity.findAll({}, { with: ['events'] }).then(
-        (activities) => { self.activities = activities }
-      )
+      return new Promise((resolve, reject) => {
+        Activity.findAll({}, { with: ['events'] }).then(
+          (activities) => {
+            self.activities = activities
+            resolve(activities)
+          },
+          () => { reject() }
+        )
+      })
     }
     self.update()
   }
@@ -455,8 +472,14 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     var self = this
 
     self.update = () => {
-      return Term.findAll().then((terms) => {
-        self.terms = terms
+      return new Promise((resolve, reject) => {
+        return Term.findAll().then(
+          (terms) => {
+            self.terms = terms
+            resolve(terms)
+          },
+          () => {}
+        )
       })
     }
     self.update()

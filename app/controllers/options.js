@@ -8,7 +8,7 @@ app.controller('OptionsController', function($scope, $controller, $mdDialog, ele
     if(elem.type === 'activity') {
       $mdDialog.show({
         controller: 'SubstanceController as ctrl',
-        templateUrl: 'activity.html',
+        templateUrl: 'app/views/activity.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
@@ -20,7 +20,7 @@ app.controller('OptionsController', function($scope, $controller, $mdDialog, ele
     } else if(elem.type === 'term') {
       $mdDialog.show({
         controller: 'TermController as ctrl',
-        templateUrl: 'term.html',
+        templateUrl: 'app/views/term.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
