@@ -1,6 +1,6 @@
 app.controller('ActivitiesTabController',
-  function($scope, Event, EventsUpdater, ActivitiesUpdater, $mdDialog) {
-    $scope.updater = ActivitiesUpdater
+  function($scope/*, Event, EventsUpdater, ActivitiesUpdater, $mdDialog*/) {
+/*    $scope.updater = ActivitiesUpdater
 
     this.activityOptions = function(activity) {
       $mdDialog.show({
@@ -40,5 +40,6 @@ app.controller('ActivitiesTabController',
         }
       )
     }
+*/
   }
 )
