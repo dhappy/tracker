@@ -18,12 +18,18 @@ app.factory('EventsUpdater', function(Event) {
       return out
     }
 
-    self.update = () => {
-        return Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
-          self.events = events
-          self.eventsByDay = groupByDay(events)
-        })
-    }
+    self.update = () => new Promise(
+      (resolve, reject) => {
+        Event.findAll({}, { with: ['activity', 'term'] }).then(
+          (events) => {
+            events.byDay = groupByDay(events)
+            self.events = events
+            resolve(events)
+          },
+          () => { reject() }
+        )
+      }
+    )
     self.update()
   }
 

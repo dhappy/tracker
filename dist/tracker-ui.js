@@ -43,8 +43,26 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   }
 ])
 ;app.controller('ActivitiesTabController',
-  function($scope, Event, EventsUpdater, ActivitiesUpdater) {
-    $scope.activitiesUpdater = ActivitiesUpdater
+  function($scope, Event, EventsUpdater, ActivitiesUpdater, $mdDialog) {
+    $scope.updater = ActivitiesUpdater
+
+    this.activityOptions = function(activity) {
+      $mdDialog.show({
+        controller: 'OptionsController as ctrl',
+        templateUrl: 'app/views/options.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose: true,
+        fullscreen: true,
+        locals: {
+          elem: activity
+        }
+      })
+      .then(
+        (activity) => { console.log('ff'); ActivitiesUpdater.update() },
+        () => {}
+      )
+    }
 
     this.activitySelected = function(activity) {
       var now = new Date().toISOString()
@@ -53,45 +71,27 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
         activity: activity,
         time: now,
       }
-      Event.create(data).then((event) => {
-        //event.save() // source_id not serialized
-        EventsUpdater.update().then(() => { $scope.selectedTab = 2 })
-      })
+      Event.create(data).then(
+        (event) => {
+          //event.save() // source_id not serialized
+          EventsUpdater.update().then(
+            () => {
+              console.log('hr')
+              $scope.selectedTab = 2
+            },
+            () => {}
+          )
+        }
+      )
     }
-
-  this.activityOptions = function(activity) {
-    $mdDialog.show({
-      controller: 'OptionsController as ctrl',
-      templateUrl: 'app/views/options.html',
-      parent: angular.element(document.body),
-      targetEvent: event,
-      clickOutsideToClose: true,
-      fullscreen: true,
-      locals: {
-        elem: activity
-      }
-    })
-    .then(
-      (activity) => {
-        ActivitiesUpdater.update()
-        EventsUpdater.update()
-      },
-      () => {}
-    )
-  }
-
-    console.log('h')
   }
 )
 ;app.controller('DialogController', function($scope, $mdDialog) {
   $scope.hide = () => { $mdDialog.hide() }
   $scope.cancel = () => { $mdDialog.cancel() }
 })
-;app.controller('EventsTabController', function($scope, Event) {
-  Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
-    $scope.events = events
-    $scope.eventsByDay = groupByDay(events)
-  })
+;app.controller('EventsTabController', function($scope, EventsUpdater) {
+  $scope.updater = EventsUpdater
 })
 ;app.controller('GoalsTabController', function($scope) {
 })
@@ -471,6 +471,66 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
     }
   }
 })
+;app.controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http, activity) {
+  $controller('DialogController', { $scope: $scope })
+
+  if(activity) {
+    $scope.name = activity.name
+    $scope.color = activity.color
+    $scope.activity = activity
+    $scope.function = 'Save'
+  } else {
+    $scope.function = 'Create'
+  }
+
+  this.querySearch = function(text) {
+    return new Promise(function(resolve, reject) {
+      var query =
+      'SELECT DISTINCT'
+      + ' ?item ?name (REPLACE(STR(?item),".*Q","Q") AS ?qid)'
+      + ' WHERE {'
+      + '  ?item wdt:P31/wdt:P279* wd:Q8386.'
+      + '  ?item rdfs:label ?name.'
+      + '  FILTER(LANG(?name) = "en")'
+      + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
+      + '} LIMIT 15'
+      var url = `https://query.wikidata.org/sparql?query=${query}`
+      $http.get(url).then(function(result) {
+        resolve(result.data.results.bindings)
+      },
+      function() {
+        reject()
+      })
+    })
+  }
+
+  this.processReturn = function(activity) {
+    if(activity) {
+      activity.name = $scope.name
+      activity.color = $scope.color
+      activity.save()
+      $mdDialog.hide(activity)
+    } else {
+      if($scope.name) {
+        var data = {
+          name: $scope.name,
+          color: $scope.color,
+        }
+
+        if($scope.substance) {
+          data['qid'] = $scope.substance.qid.value
+        }
+
+        Activity.create(data).then(
+          (activity) => {
+            $mdDialog.hide(activity)
+          },
+          () => { console.warn('Failed to save activity') }
+        )
+      }
+    }
+  }
+})
 ;app.controller('TermController', function($scope, $controller, $mdDialog, Term, term) {
   $controller('DialogController', { $scope: $scope })
 
@@ -531,12 +591,18 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       return out
     }
 
-    self.update = () => {
-        return Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
-          self.events = events
-          self.eventsByDay = groupByDay(events)
-        })
-    }
+    self.update = () => new Promise(
+      (resolve, reject) => {
+        Event.findAll({}, { with: ['activity', 'term'] }).then(
+          (events) => {
+            events.byDay = groupByDay(events)
+            self.events = events
+            resolve(events)
+          },
+          () => { reject() }
+        )
+      }
+    )
     self.update()
   }
 
@@ -681,12 +747,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       + `  FILTER(STRSTARTS(lcase(?name), lcase("${text}")))`  
       + '} LIMIT 15'
       var url = `https://query.wikidata.org/sparql?query=${query}`
-      $http.get(url).then(function(result) {
-        resolve(result.data.results.bindings)
-      },
-      function() {
-        reject()
-      })
+      $http.get(url).then(
+        (result) => resolve(result.data.results.bindings),
+        () => { reject() }
+      )
     })
   }
 
