@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 	  <link rel="shortcut icon" href="favicon.png"/>
     <link href="node_modules/angular-material/angular-material.min.css"
-	  rel="stylesheet"/>
-      <link href='css/material-icons.css' rel='stylesheet'/>
+  	 rel="stylesheet"/>
+    <link href='css/material-icons.css' rel='stylesheet'/>
     <link href='node_modules/angular-color-picker/angular-color-picker.css'
-    rel="stylesheet"/>
+     rel="stylesheet"/>
     <link href="index.css" rel="stylesheet"/>
   </head>
   <body ng-app='eventTypes'>
-    <md-content ng-cloak>
-      <md-toolbar id='tabs' ng-controller='HomeController as ctrl'>
+    <md-content ng-cloak ng-controller='HomeController as ctrl'>
+      <md-toolbar id='tabs'>
         <div class="md-toolbar-tools">
           <md-truncate>Habit Tracker</md-truncate>
 
@@ -41,131 +41,7 @@
       </md-tabs>
 
       <div id="content" ui-view flex> </div>
-    </div>
-
-    <script type="text/ng-template" id="activity.html">
-    </script>
-
-    <script type="text/ng-template" id="term.html">
-      <md-dialog aria-label="{{function}} Term">
-      	<form ng-cloak ui-keypress="{13:'ctrl.processReturn(term)'}">
-      	  <md-toolbar>
-      	    <div class="md-toolbar-tools">
-      	      <h2>{{function}} Term</h2>
-      	      <span flex></span>
-      	      <md-button class="md-icon-button" ng-click="cancel()"'
-               aria-label="Close Dialog">
-      		    	<i class="material-icons">close</i>
-      	      </md-button>
-      	    </div>
-      	  </md-toolbar>
-
-      	  <md-dialog-content>
-            <md-input-container>
-      	      <label>Name</label>
-      	      <input ng-model="name" md-autofocus required/>
-      	    </md-input-container>
-      	    <md-input-container>
-      	      <label>Color</label>
-              <input ng-model="color"/>
-      	      <color-picker ng-model="color"
-               ng-init="color = color || '#f05a28'">
-              </color-picker>
-      	    </md-input-container>
-      	    <md-dialog-actions layout="row">
-      	      <span flex></span>
-      	      <md-button ng-click="cancel()">Cancel</md-button>
-      	      <md-button ng-click="ctrl.processReturn(term)">
-                {{function}}
-              </md-button>
-      	    </md-dialog-actions>
-      	  </md-dialog-content> 
-      	</form>
-      </md-dialog>
-    </script>
-
-    <script type="text/ng-template" id="recordMood.html">
-      <md-dialog aria-label="Record Mood">
-      	<form ng-cloak>
-      	  <md-toolbar>
-      	    <div class="md-toolbar-tools">
-      	      <h2>Record Mood</h2>
-      	      <span flex></span>
-      	      <md-button class="md-icon-button" ng-click="cancel()"
-                aria-label="Close Dialog">
-            		<i class="material-icons">close</i>
-      	      </md-button>
-      	    </div>
-      	  </md-toolbar>
-
-      	  <md-dialog-content>
-      	    <h1 ng-attr-style='color: {{colorOf(weight)}}'>{{name}}</h1>
-      	    <h1 ng-attr-style='color: {{colorOf(weight)}}'>{{weight}}</h1>
-      	    <md-slider-container>
-      	      <md-slider flex min="-100" max="100" ng-model="weight" aria-label="Weight"></md-slider>
-      	    </md-slider-container>
-      	    <md-dialog-actions layout="row">
-      	      <span flex></span>
-      	      <md-button ng-click="cancel()">Cancel</md-button>
-      	      <md-button ng-click="ctrl.returnNew()">Record</md-button>
-      	    </md-dialog-actions>
-      	  </md-dialog-content>
-      	</form>
-      </md-dialog>
-    </script>
-
-    <script type="text/ng-template" id="options.html">
-      <md-dialog aria-label="Options">
-        <form ng-cloak>
-          <md-toolbar>
-            <div class="md-toolbar-tools">
-              <h2>Options</h2>
-              <span flex></span>
-              <md-button class="md-icon-button" ng-click="cancel()"
-                aria-label="Close Dialog">
-                <i class="material-icons">close</i>
-              </md-button>
-            </div>
-          </md-toolbar>
-
-          <md-dialog-content>
-            <h1>{{name}}</h1>
-            <md-list ng-cloak>
-              <md-list-item>
-                <md-button ng-click='ctrl.edit(elem)'>Edit</md-button>
-              </md-list-item>
-              <md-list-item>
-                <md-button ng-click='ctrl.delete(elem)'>Delete</md-button>
-              </md-list-item>
-            </md-list>
-            <md-dialog-actions layout="row">
-              <span flex></span>
-              <md-button ng-click="cancel()">Cancel</md-button>
-            </md-dialog-actions>
-          </md-dialog-content>
-        </form>
-      </md-dialog>
-    </script>
-
-    <script type="text/ng-template" id="settings.html">
-      <md-dialog aria-label="Settings">
-        <form ng-cloak>
-          <md-toolbar>
-            <div class="md-toolbar-tools">
-              <h2>Settings</h2>
-              <span flex></span>
-              <md-button class="md-icon-button" ng-click="cancel()"
-                aria-label="Close Dialog">
-                <i class="material-icons">close</i>
-              </md-button>
-            </div>
-          </md-toolbar>
-
-          <md-dialog-content>
-          </md-dialog-content>
-        </form>
-      </md-dialog>
-    </script>
+    </md-content>
 
     <script src='node_modules/angular/angular.js' type='application/javascript'></script>
     <script src="node_modules/angular-animate/angular-animate.min.js"></script>

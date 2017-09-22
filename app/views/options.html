@@ -1,0 +1,30 @@
+<md-dialog aria-label="Options">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Options</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()"
+          aria-label="Close Dialog">
+          <i class="material-icons">close</i>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <h1>{{name}}</h1>
+      <md-list ng-cloak>
+        <md-list-item>
+          <md-button ng-click='ctrl.edit(elem)'>Edit</md-button>
+        </md-list-item>
+        <md-list-item>
+          <md-button ng-click='ctrl.delete(elem)'>Delete</md-button>
+        </md-list-item>
+      </md-list>
+      <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">Cancel</md-button>
+      </md-dialog-actions>
+    </md-dialog-content>
+  </form>
+</md-dialog>

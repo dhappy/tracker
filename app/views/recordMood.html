@@ -1,0 +1,27 @@
+<md-dialog aria-label="Record Mood">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Record Mood</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()"
+          aria-label="Close Dialog">
+          <i class="material-icons">close</i>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <h1 ng-attr-style='color: {{colorOf(weight)}}'>{{name}}</h1>
+      <h1 ng-attr-style='color: {{colorOf(weight)}}'>{{weight}}</h1>
+      <md-slider-container>
+        <md-slider flex min="-100" max="100" ng-model="weight" aria-label="Weight"></md-slider>
+      </md-slider-container>
+      <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">Cancel</md-button>
+        <md-button ng-click="ctrl.returnNew()">Record</md-button>
+      </md-dialog-actions>
+    </md-dialog-content>
+  </form>
+</md-dialog>

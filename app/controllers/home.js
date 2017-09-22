@@ -1,32 +1,21 @@
-app.controller('HomeController', function($scope, $mdDialog, $location, Activity, Term, Event, store) {
-  Term.findAll({}, { with: ['events'] }).then((terms) => {
-    $scope.terms = terms
-  })
-  Event.findAll({}, { with: ['activity', 'term'] }).then((events) => {
-    $scope.events = events
-    $scope.eventsByDay = groupByDay(events)
-  })
+app.controller('HomeController',
+  function($scope, $mdDialog, $location, Activity, Term, Event, store, $transitions) {
 
-  $scope.$watch('selectedIndex', function(current, old) {
-    switch(current) {
-      case 0:
-        $location.url("/activities")
-        break
-      case 1:
-        $location.url("/moods")
-        break
-      case 2:
-        $location.url("/events");
-        break;
+  $transitions.onSuccess({},
+    function(transition) {
+      var $state = transition.router.stateService
+      var currentTab = $state.$current.data.tabIndex
+      console.log(currentTab)
+      $scope.selectedTab = currentTab
     }
-  })
+  )
 
   this.conditionalAdd = function(event) {
     switch($scope.selectedTab) {
       case 0:
       $mdDialog.show({
         controller: 'SubstanceController as ctrl',
-        templateUrl: 'activity.html',
+        templateUrl: 'app/views/activity.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
@@ -35,7 +24,7 @@ app.controller('HomeController', function($scope, $mdDialog, $location, Activity
           activity: undefined
         },
       })
-      .then((activity) => {
+      .then((activity) => { 
         Activity.findAll().then((activities) => {
           $scope.activities = activities
           $scope.$apply()
@@ -45,7 +34,7 @@ app.controller('HomeController', function($scope, $mdDialog, $location, Activity
       case 1:
       $mdDialog.show({
         controller: 'TermController as ctrl',
-        templateUrl: 'term.html',
+        templateUrl: 'app/views/term.html',
         parent: angular.element(document.body),
         targetEvent: event,
         clickOutsideToClose: true,
@@ -68,7 +57,7 @@ app.controller('HomeController', function($scope, $mdDialog, $location, Activity
   this.activityOptions = function(activity) {
     $mdDialog.show({
       controller: 'OptionsController as ctrl',
-      templateUrl: 'options.html',
+      templateUrl: 'app/views/options.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose: true,
@@ -91,7 +80,7 @@ app.controller('HomeController', function($scope, $mdDialog, $location, Activity
   this.termOptions = function(term) {
     $mdDialog.show({
       controller: 'OptionsController as ctrl',
-      templateUrl: 'options.html',
+      templateUrl: 'app/views/options.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose: true,
@@ -185,7 +174,7 @@ app.controller('HomeController', function($scope, $mdDialog, $location, Activity
   this.moodSelected = function(term) {
     $mdDialog.show({
       controller: 'RecordController as ctrl',
-      templateUrl: 'recordMood.html',
+      templateUrl: 'app/views/recordMood.html',
       parent: angular.element(document.body),
       targetEvent: event,
       clickOutsideToClose: true,
