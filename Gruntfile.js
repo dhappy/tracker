@@ -17,7 +17,7 @@ module.exports = function(grunt) {
       },
       build: {
         src: ['app/routes.js', 'app/**/*.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+        dest: 'dist/<%= pkg.name %>.min.js'
       },
     },
     watch: {

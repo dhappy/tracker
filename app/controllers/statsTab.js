@@ -1,19 +1,62 @@
-app.controller('StatsTabController', function($scope) {
-  $scope.labels = []
+app.controller('StatsTabController', function($scope, EventsUpdater) {
+  //$scope.labels = []
 
-  for(var i = 0; i < 24; i++) {
-    $scope.labels.push(i)
+  // for(var i = 0; i < 24; i++) {
+  //   $scope.labels.push(i)
+  // }
+
+  function rand(min, max) {
+    var seed = 5000
+    min = min === undefined ? 0 : min;
+    max = max === undefined ? 1 : max;
+    this._seed = (seed * 9301 + 49297) % 233280;
+    return min + (this._seed / 233280) * (max - min);
   }
 
-  $scope.series = ['Series A', 'Series B']
-  $scope.data = [
-    [65, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 25, 86, 27, 90]
-  ]
-  $scope.datasetOverride = [
-    { yAxisID: 'y-axis-1' },
-    { yAxisID: 'y-axis-2' },
-  ]
+  window.randomScalingFactor = function() {
+    return Math.round(rand(-100, 100));
+  }
+
+  function timeToDecimal(time) {
+    var time = new Date(time)
+    var decimal = time.getHours()
+    decimal += time.getMinutes() / 60
+    return decimal
+  }
+
+  $scope.series = []
+  $scope.data = []
+
+  EventsUpdater.update().then(
+    (events) => {
+      for(day in events.byDay) {
+        var day = events.byDay[day]
+        var data = {}
+        for(event in day.events) {
+          var event = day.events[event]
+          var source = event.source
+          if(source.type == 'activity') {
+            data[source.name] = data[source.name] || []
+            console.log(data[source.name])
+            data[source.name].push(
+              { x: timeToDecimal(event.time), y: 0 }
+            )
+          } else if(source.type == 'term') {
+
+          } else {
+            console.error(`Unknown event type: ${source.type}`, event)
+          }
+        }
+        console.log(data)
+        for(type in data) {
+          $scope.series.push(type)
+          $scope.data.push(data[type])
+        }
+      }
+    },
+    () => {}
+  )
+
   $scope.options = {
     responsive: true, 
     maintainAspectRatio: false,
@@ -28,9 +71,9 @@ app.controller('StatsTabController', function($scope) {
           autoSkip: true,
           maxTicksLimit: 24,
           stepSize: 1,
+          min: 0,
+          max: 23,
         },
-        min: 0,
-        max: 23,
       }],
       yAxes: [
         {
@@ -38,16 +81,6 @@ app.controller('StatsTabController', function($scope) {
           type: 'linear',
           display: true,
           position: 'left',
-          min: -100,
-          max: 100,
-        },
-        {
-          id: 'y-axis-2',
-          type: 'linear',
-          display: true,
-          position: 'right',
-          min: -100,
-          max: 100,
         }
       ]
     }
