@@ -30,6 +30,6 @@ md-dialog h1 {
     height: 200px;
 }
 
-#line {
+canvas {
     height: 150px !important;
 }

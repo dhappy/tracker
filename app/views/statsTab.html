@@ -1,8 +1,12 @@
 <md-content class="md-padding">
-  <canvas id="line" class="chart chart-line"
-   chart-data="data"
-   chart-labels="labels" chart-series="series"
-   chart-options="options"
-   chart-dataset-override="datasetOverride">
-  </canvas>
+  <div ng-repeat='graph in graphs'>
+    <h3>{{graph.display_text}}</h3>
+    <canvas 
+     class="chart chart-line"
+     chart-data="graph.data"
+     chart-series="graph.series"
+     chart-options="options"
+     chart-dataset-override="datasetOverride">
+    </canvas>
+  </div>
 </md-content>

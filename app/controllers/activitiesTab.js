@@ -27,7 +27,6 @@ app.controller('ActivitiesTabController',
         activity: activity,
         time: now,
       }
-      console.log(data)
       Event.create(data).then(
         (event) => {
           event.save() // source_id not serialized

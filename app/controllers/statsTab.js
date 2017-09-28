@@ -24,21 +24,19 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
     return decimal
   }
 
-  $scope.series = []
-  $scope.data = []
+  $scope.graphs = []
 
   EventsUpdater.update().then(
     (events) => {
       for(day in events.byDay) {
         var day = events.byDay[day]
-        var data = {}
+        var records = {}
         for(event in day.events) {
           var event = day.events[event]
           var source = event.source
           if(source.type == 'activity') {
-            data[source.name] = data[source.name] || []
-            console.log(data[source.name])
-            data[source.name].push(
+            records[source.name] = records[source.name] || []
+            records[source.name].push(
               { x: timeToDecimal(event.time), y: 0 }
             )
           } else if(source.type == 'term') {
@@ -47,11 +45,22 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
             console.error(`Unknown event type: ${source.type}`, event)
           }
         }
-        console.log(data)
-        for(type in data) {
-          $scope.series.push(type)
-          $scope.data.push(data[type])
+        var series = []
+        var data = []
+               
+        for(type in records) {
+          series.push(type)
+          data.push(records[type])
         }
+
+        $scope.graphs.push(
+          {
+            display_text: day.display_text,
+            series: series,
+            data: data,
+          }
+        )
+        console.log($scope.graphs)
       }
     },
     () => {}
