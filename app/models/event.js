@@ -17,6 +17,13 @@ app.service('Event', function(store) {
             return moment(this.time).format('H:mm:ss')
           }
         },
+        previous: {
+          type: 'object',
+          get() {
+            console.log(this)
+          }
+        },
+
       },
     },
     relations: {

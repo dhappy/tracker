@@ -1,4 +1,4 @@
-/*! tracker-ui 2017-09-27 */
+/*! tracker-ui 2017-09-28 */
 var app =
 angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'pr.longpress', 'mp.colorPicker'])
 .config(['$stateProvider', '$urlRouterProvider',   
@@ -305,22 +305,33 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
           var event = day.events[event]
           var source = event.source
           if(source.type == 'activity') {
-            records[source.name] = records[source.name] || []
-            records[source.name].push(
+            records[source.name] = records[source.name] || {
+              color: source.color,
+              points: [],
+            }
+            records[source.name]['points'].push(
               { x: timeToDecimal(event.time), y: 0 }
             )
           } else if(source.type == 'term') {
-
+            if(typeof(records[source.name]) === 'undefined') {
+              records[source.name] = {
+                color: source.color,
+                points: [event.previous],
+              }
+            }
           } else {
             console.error(`Unknown event type: ${source.type}`, event)
           }
         }
         var series = []
         var data = []
+        var colors = []
                
         for(type in records) {
           series.push(type)
-          data.push(records[type])
+          console.log(type, records[type])
+          data.push(records[type]['points'])
+          colors.push(records[type]['color'])
         }
 
         $scope.graphs.push(
@@ -328,6 +339,7 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             display_text: day.display_text,
             series: series,
             data: data,
+            colors: colors,
           }
         )
         console.log($scope.graphs)
@@ -339,6 +351,9 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   $scope.options = {
     responsive: true, 
     maintainAspectRatio: false,
+    elements: {
+      point: { radius: 6, },
+    },
     scales: {
       xAxes: [{
         type: 'linear',
@@ -364,6 +379,8 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       ]
     }
   }
+
+
 })
 ;app.controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http, activity) {
   $controller('DialogController', { $scope: $scope })
@@ -508,13 +525,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   }
 
   return new EventsUpdater()
-});app.factory('TermsUpdater', function(Term) {
+});app.factory('TermsUpdater', function(Term, Event) {
   function TermsUpdater() {
     var self = this
 
     self.update = () => {
       return new Promise((resolve, reject) => {
-        return Term.findAll().then(
+        return Term.findAll({}, { with: ['event'] }).then(
           (terms) => {
             self.terms = terms
             resolve(terms)
@@ -582,6 +599,13 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             return moment(this.time).format('H:mm:ss')
           }
         },
+        previous: {
+          type: 'object',
+          get() {
+            console.log(this)
+          }
+        },
+
       },
     },
     relations: {

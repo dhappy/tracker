@@ -35,22 +35,33 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
           var event = day.events[event]
           var source = event.source
           if(source.type == 'activity') {
-            records[source.name] = records[source.name] || []
-            records[source.name].push(
+            records[source.name] = records[source.name] || {
+              color: source.color,
+              points: [],
+            }
+            records[source.name]['points'].push(
               { x: timeToDecimal(event.time), y: 0 }
             )
           } else if(source.type == 'term') {
-
+            if(typeof(records[source.name]) === 'undefined') {
+              records[source.name] = {
+                color: source.color,
+                points: [event.previous],
+              }
+            }
           } else {
             console.error(`Unknown event type: ${source.type}`, event)
           }
         }
         var series = []
         var data = []
+        var colors = []
                
         for(type in records) {
           series.push(type)
-          data.push(records[type])
+          console.log(type, records[type])
+          data.push(records[type]['points'])
+          colors.push(records[type]['color'])
         }
 
         $scope.graphs.push(
@@ -58,6 +69,7 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
             display_text: day.display_text,
             series: series,
             data: data,
+            colors: colors,
           }
         )
         console.log($scope.graphs)
@@ -69,6 +81,9 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
   $scope.options = {
     responsive: true, 
     maintainAspectRatio: false,
+    elements: {
+      point: { radius: 6, },
+    },
     scales: {
       xAxes: [{
         type: 'linear',
@@ -94,4 +109,6 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
       ]
     }
   }
+
+
 })
