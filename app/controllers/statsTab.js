@@ -18,10 +18,12 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
   }
 
   function timeToDecimal(time) {
-    var time = new Date(time)
-    var decimal = time.getHours()
-    decimal += time.getMinutes() / 60
-    return decimal
+    if(time) {
+      var time = new Date(time)
+      var decimal = time.getHours()
+      decimal += time.getMinutes() / 60
+      return decimal
+    }
   }
 
   $scope.graphs = []
@@ -46,9 +48,15 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
             if(typeof(records[source.name]) === 'undefined') {
               records[source.name] = {
                 color: source.color,
-                points: [event.previous],
+                points: [
+                  //{ x: timeToDecimal(event.previous.time), y: source.weight }
+                ],
               }
             }
+            records[source.name]['points'].push(
+              { x: timeToDecimal(event.time), y: event.weight }
+            )
+            console.log(records)
           } else {
             console.error(`Unknown event type: ${source.type}`, event)
           }
@@ -59,7 +67,6 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
                
         for(type in records) {
           series.push(type)
-          console.log(type, records[type])
           data.push(records[type]['points'])
           colors.push(records[type]['color'])
         }
@@ -72,7 +79,6 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
             colors: colors,
           }
         )
-        console.log($scope.graphs)
       }
     },
     () => {}
@@ -93,10 +99,10 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
             return `${value}:00`
           },
           autoSkip: true,
-          maxTicksLimit: 24,
+          maxTicksLimit: 25,
           stepSize: 1,
           min: 0,
-          max: 23,
+          max: 24,
         },
       }],
       yAxes: [
@@ -109,6 +115,4 @@ app.controller('StatsTabController', function($scope, EventsUpdater) {
       ]
     }
   }
-
-
 })

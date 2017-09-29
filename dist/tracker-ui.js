@@ -288,10 +288,12 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
   }
 
   function timeToDecimal(time) {
-    var time = new Date(time)
-    var decimal = time.getHours()
-    decimal += time.getMinutes() / 60
-    return decimal
+    if(time) {
+      var time = new Date(time)
+      var decimal = time.getHours()
+      decimal += time.getMinutes() / 60
+      return decimal
+    }
   }
 
   $scope.graphs = []
@@ -316,9 +318,15 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             if(typeof(records[source.name]) === 'undefined') {
               records[source.name] = {
                 color: source.color,
-                points: [event.previous],
+                points: [
+                  //{ x: timeToDecimal(event.previous.time), y: source.weight }
+                ],
               }
             }
+            records[source.name]['points'].push(
+              { x: timeToDecimal(event.time), y: event.weight }
+            )
+            console.log(records)
           } else {
             console.error(`Unknown event type: ${source.type}`, event)
           }
@@ -329,7 +337,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
                
         for(type in records) {
           series.push(type)
-          console.log(type, records[type])
           data.push(records[type]['points'])
           colors.push(records[type]['color'])
         }
@@ -342,7 +349,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             colors: colors,
           }
         )
-        console.log($scope.graphs)
       }
     },
     () => {}
@@ -363,10 +369,10 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
             return `${value}:00`
           },
           autoSkip: true,
-          maxTicksLimit: 24,
+          maxTicksLimit: 25,
           stepSize: 1,
           min: 0,
-          max: 23,
+          max: 24,
         },
       }],
       yAxes: [
@@ -379,8 +385,6 @@ angular.module('eventTypes', ['ngMaterial', 'chart.js', 'ui.router', 'timer', 'p
       ]
     }
   }
-
-
 })
 ;app.controller('SubstanceController', function($scope, $controller, store, Activity, $mdDialog, $http, activity) {
   $controller('DialogController', { $scope: $scope })
