@@ -10,6 +10,9 @@
     <link href='node_modules/angular-color-picker/angular-color-picker.css'
      rel="stylesheet"/>
     <link href="index.css" rel="stylesheet"/>
+    <link rel="manifest" href="manifest.json"/>
+    <meta name="description" content="Experience Recommender">
+    <meta name="theme-color" content="#2F3BA2" />    
   </head>
   <body ng-app='eventTypes'>
     <md-content ng-cloak ng-controller='HomeController as ctrl'>
@@ -58,6 +61,17 @@
     <script src='node_modules/js-data-localstorage/dist/js-data-localstorage.js'></script>
     <script src='node_modules/angular-long-press/dist/angular-long-press.min.js'></script>
     <script src='node_modules/angular-color-picker/angular-color-picker.js'></script>
-    <script src='dist/tracker-ui.js'></script>  
+    <script src='dist/tracker-ui.js'></script>
+
+    <script type="application/javascript">
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/app/workers/service-worker.js')
+          .then((reg) => {
+            console.log('Service worker registered.', reg);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
