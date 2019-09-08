@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from '../../models/Event';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-event-list',
@@ -9,7 +10,7 @@ import { Event } from '../../models/Event';
 export class EventListComponent implements OnInit {
   events:Event[];
 
-  constructor() { }
+  constructor(private database: DataService) { }
 
   ngOnInit() {
   	this.events = [
@@ -26,6 +27,15 @@ export class EventListComponent implements OnInit {
   			time: '2019-01-01'
   		}
   	];
-  }
 
+	this.database.fetch().then(result => {
+	  console.log(result);
+      this.events = [];
+      for(let i = 0; i < result.rows.length; i++) {
+        this.events.push(result.rows[i].doc);
+      }
+    }, error => {
+      console.error(error);
+    });
+  }
 }
