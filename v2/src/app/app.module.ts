@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EventListComponent } from './components/event-list/event-list.component';
+import { EventListRowComponent } from './components/event-list-row/event-list-row.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    EventListComponent
+    EventListComponent,
+    EventListRowComponent
   ],
   imports: [
     BrowserModule,
