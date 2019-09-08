@@ -3,6 +3,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 
 import PouchDB from 'pouchdb';
+import PouchFind from 'pouchdb-find';
+
+PouchDB.plugin(PouchFind);
 
 @Injectable()
 export class DataService {
@@ -43,8 +46,11 @@ export class DataService {
   }
 
   public post(document:any) {
-    console.log('s', this.db.find);
     return this.db.post(document);
+  }
+
+  public find(query:any) {
+    return this.db.find(query);
   }
 
   public sync(remote:string) {

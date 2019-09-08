@@ -44,5 +44,16 @@ export class EventListComponent implements OnInit {
     }, error => {
       console.error(error);
     });
+
+	let query = { selector: { title: 'Test' } }
+
+	this.database.find(query).then(result => {
+	  console.log(result);
+      for(let i = 0; i < result.docs.length; i++) {
+        this.events.push(result.docs[i]);
+      }
+    }, error => {
+      console.error(error);
+    });
   }
 }
