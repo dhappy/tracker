@@ -7,6 +7,7 @@ export class Activity {
   color:string;
 
   lastEvent():string {
+  /*
     if(this.events.length === 0) {
       return undefined
     }
@@ -15,5 +16,7 @@ export class Activity {
     }
     var events = this.events.sort(compare)
     return this.events[0].time
+  */
+  	return 'placeholder';
   }
 }
