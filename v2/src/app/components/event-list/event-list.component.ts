@@ -28,6 +28,13 @@ export class EventListComponent implements OnInit {
   		}
   	];
 
+  	this.database.post({
+  		title: 'Test'
+  	})
+  	.then(result => {
+	  console.log(result);
+	});
+
 	this.database.fetch().then(result => {
 	  console.log(result);
       this.events = [];

@@ -42,6 +42,11 @@ export class DataService {
     });
   }
 
+  public post(document:any) {
+    console.log('s', this.db.find);
+    return this.db.post(document);
+  }
+
   public sync(remote:string) {
       const remoteDatabase = new PouchDB(remote);
       this.db.sync(remoteDatabase, {
@@ -56,5 +61,4 @@ export class DataService {
   public getChangeListener() {
       return this.listener;
   }
-
 }
