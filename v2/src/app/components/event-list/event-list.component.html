@@ -1,1 +1,5 @@
-<div *ngFor='let event of events'>{{event._id}} -- {{event.title}}</div>
+<ul>
+<ng-template ngFor let-event [ngForOf]='events'>
+	<li>{{event._id}} -- {{event.title}}</li>
+</ng-template>
+</ul>
