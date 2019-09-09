@@ -19,4 +19,8 @@ export class Activity {
   */
   	return 'placeholder';
   }
+
+  deserialize(input: any): this {
+    return Object.assign(this, input);
+  }
 }

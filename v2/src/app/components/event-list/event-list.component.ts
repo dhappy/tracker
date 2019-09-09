@@ -56,4 +56,8 @@ export class EventListComponent implements OnInit {
       console.error(error);
     });
   }
+
+  showNewActivityDialog() {
+  	console.log('h');
+  }
 }
