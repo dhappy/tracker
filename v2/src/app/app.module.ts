@@ -12,12 +12,14 @@ import { environment } from '../environments/environment';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ActivityConfigurationComponent } from './activity-configuration/activity-configuration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EventListComponent,
-    EventListRowComponent
+    EventListRowComponent,
+    ActivityConfigurationComponent
   ],
   imports: [
     BrowserModule,
