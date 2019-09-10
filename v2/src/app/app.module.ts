@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ActivityConfigurationComponent } from './activity-configuration/activity-configuration.component';
+import { ActivityConfigurationComponent } from './components/activity-configuration/activity-configuration.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,7 @@ import { ActivityConfigurationComponent } from './activity-configuration/activit
     MatDialogModule
   ],
   providers: [DataService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ActivityConfigurationComponent]
 })
 export class AppModule { }

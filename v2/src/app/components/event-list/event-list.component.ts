@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Event } from '../../models/Event';
 import { DataService } from '../../services/data.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ActivityConfigurationComponent } from '../activity-configuration/activity-configuration.component';
 
 @Component({
   selector: 'app-event-list',
@@ -10,7 +12,7 @@ import { DataService } from '../../services/data.service';
 export class EventListComponent implements OnInit {
   events:Event[];
 
-  constructor(private database: DataService) { }
+  constructor(private database: DataService, public dialog: MatDialog) { }
 
   ngOnInit() {
   	this.events = [
@@ -58,6 +60,7 @@ export class EventListComponent implements OnInit {
   }
 
   showNewActivityDialog() {
+    let dialogRef = this.dialog.open(ActivityConfigurationComponent);
   	console.log('h');
   }
 }
