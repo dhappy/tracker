@@ -12,6 +12,8 @@ import { environment } from '../environments/environment';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material';
 import { ActivityConfigurationComponent } from './components/activity-configuration/activity-configuration.component';
 
 @NgModule({
@@ -28,7 +30,9 @@ import { ActivityConfigurationComponent } from './components/activity-configurat
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent],

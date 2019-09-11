@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Event } from '../../models/Event';
 import { DataService } from '../../services/data.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatFormField } from '@angular/material/form-field';
 import { ActivityConfigurationComponent } from '../activity-configuration/activity-configuration.component';
 
 @Component({
