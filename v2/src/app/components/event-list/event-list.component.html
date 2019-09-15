@@ -1,9 +1,5 @@
 <ul>
-<ng-template ngFor let-event [ngForOf]='events'>
-	<li>{{event._id}} -- {{event.title}}</li>
+<ng-template ngFor let-event [ngForOf]='events | async'>
+	<li>{{event._id}} -- {{event.activity.name}}</li>
 </ng-template>
 </ul>
-
-<button mat-fab aria-label="Add Activity" (click)='showNewActivityDialog()'>
-	<mat-icon>add</mat-icon>
-</button>

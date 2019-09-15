@@ -8,6 +8,7 @@ import * as moment from 'moment';
   styleUrls: ['./activity-configuration.component.sass']
 })
 export class ActivityConfigurationComponent implements OnInit {
+  public name:string;
 
   constructor(public dialogRef:MatDialogRef<ActivityConfigurationComponent>, @Inject(MAT_DIALOG_DATA) public data:any) {
   }
@@ -16,12 +17,20 @@ export class ActivityConfigurationComponent implements OnInit {
   }
 
   create() {
-  	console.info('Adding new activity');
-  	this.dialogRef.close('test');
+    let obj
+    if(this.name && this.name.length > 0) {
+      obj = {
+        name: this.name,
+        color: 'blue'
+      }
+    }
+    console.info('Adding New Activity', obj)
+
+  	this.dialogRef.close(obj)
   }
 
   cancel() {
-  	console.info('Canceled!');
-  	this.dialogRef.close();
+  	console.info('Canceled!')
+  	this.dialogRef.close()
   }
 }

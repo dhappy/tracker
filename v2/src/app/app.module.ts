@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EventListComponent } from './components/event-list/event-list.component';
 import { EventListRowComponent } from './components/event-list-row/event-list-row.component';
-import { DataService } from './services/data.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,13 +14,18 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material';
 import { ActivityConfigurationComponent } from './components/activity-configuration/activity-configuration.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { ActivitiesListComponent } from './components/activities-list/activities-list.component';
+import { FormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
     AppComponent,
     EventListComponent,
     EventListRowComponent,
-    ActivityConfigurationComponent
+    ActivityConfigurationComponent,
+    ActivitiesListComponent
   ],
   imports: [
     BrowserModule,
@@ -32,9 +36,11 @@ import { ActivityConfigurationComponent } from './components/activity-configurat
     MatIconModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    FormsModule
   ],
-  providers: [DataService],
+  providers: [AngularFirestore],
   bootstrap: [AppComponent],
   entryComponents: [ActivityConfigurationComponent]
 })

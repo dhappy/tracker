@@ -2,12 +2,11 @@
 
 <mat-dialog-content>
     <mat-form-field>
-        <input matInput
-               placeholder="Name">
+        <input matInput [(ngModel)]='name' placeholder='Name'/>
     </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button class="mat-button"(click)="cancel()">Cancel</button>
-    <button class="mat-raised-button mat-primary"(click)="create()">Create</button>
+    <button class='mat-button'(click)="cancel()">Cancel</button>
+    <button class='mat-raised-button mat-primary'(click)="create()">Create</button>
 </mat-dialog-actions>

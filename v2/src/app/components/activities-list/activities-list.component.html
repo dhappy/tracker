@@ -1,0 +1,9 @@
+<ul>
+<ng-template ngFor let-activity [ngForOf]='activities | async'>
+	<li>{{activity.id}} – {{activity.name}}</li>
+</ng-template>
+</ul>
+
+<button mat-fab aria-label='Add Activity' (click)='showNewActivityDialog()'>
+	<mat-icon>add</mat-icon>
+</button>
