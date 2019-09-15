@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-activity-configuration',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActivityConfigurationComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialogRef:MatDialogRef<ActivityConfigurationComponent>, @Inject(MAT_DIALOG_DATA) public data:any) {
+  }
 
   ngOnInit() {
   }
 
+  create() {
+  	console.info('Adding new activity');
+  	this.dialogRef.close('test');
+  }
+
+  cancel() {
+  	console.info('Canceled!');
+  	this.dialogRef.close();
+  }
 }

@@ -31,15 +31,16 @@ export class EventListComponent implements OnInit {
   		}
   	];
 
+	/*
   	this.database.post({
   		title: 'Test'
   	})
   	.then(result => {
 	  console.log(result);
 	});
+	*/
 
 	this.database.fetch().then(result => {
-	  console.log(result);
       this.events = [];
       for(let i = 0; i < result.rows.length; i++) {
         this.events.push(result.rows[i].doc);
@@ -51,7 +52,6 @@ export class EventListComponent implements OnInit {
 	let query = { selector: { title: 'Test' } }
 
 	this.database.find(query).then(result => {
-	  console.log(result);
       for(let i = 0; i < result.docs.length; i++) {
         this.events.push(result.docs[i]);
       }
@@ -61,7 +61,12 @@ export class EventListComponent implements OnInit {
   }
 
   showNewActivityDialog() {
-    let dialogRef = this.dialog.open(ActivityConfigurationComponent);
-  	console.log('h');
+    const dialogRef = this.dialog.open(ActivityConfigurationComponent);
+	dialogRef.afterClosed().subscribe(
+   	  data => {
+   	  	console.log("Dialog output:", data);
+		dialogRef.close();
+   	  }
+    );
   }
 }
