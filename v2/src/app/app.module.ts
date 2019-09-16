@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material';
 import { ActivityConfigurationComponent } from './components/activity-configuration/activity-configuration.component';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ActivitiesListComponent } from './components/activities-list/activities-list.component';
 import { FormsModule } from '@angular/forms'
 
@@ -38,9 +38,10 @@ import { FormsModule } from '@angular/forms'
     MatFormFieldModule,
     MatInputModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
     FormsModule
   ],
-  providers: [AngularFirestore],
+  providers: [],
   bootstrap: [AppComponent],
   entryComponents: [ActivityConfigurationComponent]
 })

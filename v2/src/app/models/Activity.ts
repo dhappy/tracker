@@ -1,10 +1,14 @@
 import { Deserializable } from './deserializable';
 
 export class Activity {
-  _id:string;
-  type:string = 'activity';
-  name:string;
-  color:string;
+  id:string
+  type:string = 'activity'
+  name:string
+  color:string
+
+  constructor(base:any) {
+    return Object.assign(this, base)
+  }
 
   lastEvent():string {
   /*
@@ -17,10 +21,6 @@ export class Activity {
     var events = this.events.sort(compare)
     return this.events[0].time
   */
-  	return 'placeholder';
-  }
-
-  deserialize(input: any): this {
-    return Object.assign(this, input);
+  	return 'placeholder'
   }
 }

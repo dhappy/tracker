@@ -5,6 +5,8 @@ import { MatFormField } from '@angular/material/form-field'
 import { ActivityConfigurationComponent } from '../activity-configuration/activity-configuration.component'
 import { AngularFirestore } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
+import { Activity } from '../../models/Activity'
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-activities-list',
@@ -12,12 +14,21 @@ import { Observable } from 'rxjs'
   styleUrls: ['./activities-list.component.sass']
 })
 export class ActivitiesListComponent implements OnInit {
-  activities:Observable<any[]>;
+  public activities:Observable<Activity[]>;
 
   constructor(private db:AngularFirestore, public dialog:MatDialog) {
-    this.activities = db.collection('activities').valueChanges()
-    console.log('Activities', this.activities)
-    this.activities.subscribe((datas) => { console.log("datas", datas) },(err)=>{ console.log("probleme : ", err) });
+    this.activities = (
+    	db.collection('activities')
+    	.valueChanges().pipe(map(
+    		(objs:any[]):Activity[] => {
+    			return objs.map(
+    				(obj):Activity => {
+    					return new Activity(obj)
+    				}
+				)
+    		}
+    	))
+    )
   }
 
   ngOnInit() {
@@ -26,10 +37,9 @@ export class ActivitiesListComponent implements OnInit {
   showNewActivityDialog() {
     const dialogRef = this.dialog.open(
       ActivityConfigurationComponent
-    );
+    )
 	dialogRef.afterClosed().subscribe(
    	  activity => {
-   	  	console.log('Dialog Output', activity)
    	  	if(activity) {
 		    this.db.collection('activities').add(activity)
 			.then(function(docRef) {
@@ -37,9 +47,9 @@ export class ActivitiesListComponent implements OnInit {
 			})
 			.catch(function(error) {
 			    console.error('Error: Adding Activity', error)
-			});
+			})
 		}
    	  }
-    );
+    )
   }
 }
