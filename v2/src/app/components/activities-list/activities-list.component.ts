@@ -16,18 +16,12 @@ import { map } from 'rxjs/operators';
 export class ActivitiesListComponent implements OnInit {
   public activities:Observable<Activity[]>;
 
-  constructor(private db:AngularFirestore, public dialog:MatDialog) {
+  constructor(
+  	private db:AngularFirestore,
+  	public dialog:MatDialog
+  ) {
     this.activities = (
-    	db.collection('activities')
-    	.valueChanges().pipe(map(
-    		(objs:any[]):Activity[] => {
-    			return objs.map(
-    				(obj):Activity => {
-    					return new Activity(obj)
-    				}
-				)
-    		}
-    	))
+    	db.collection<Activity>('activities').valueChanges()
     )
   }
 

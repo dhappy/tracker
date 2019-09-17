@@ -1,9 +1,13 @@
-<ul>
+<ul id='activities' class='list'>
 <ng-template ngFor let-activity [ngForOf]='activities | async'>
-	<li>{{activity.id}} – {{activity.name}}</li>
+	<li class='row'>
+		<div class='color' [style.background]='activity.color'></div>
+		<div class='name'>{{activity.name}}</div>
+		<div class='timer'>{{activity.timeSinceLast}}</div>
+	</li>
 </ng-template>
 </ul>
 
-<button mat-fab aria-label='Add Activity' (click)='showNewActivityDialog()'>
+<button mat-fab aria-label='Add Activity' (click)='showNewActivityDialog()' class='corner-button'>
 	<mat-icon>add</mat-icon>
 </button>
