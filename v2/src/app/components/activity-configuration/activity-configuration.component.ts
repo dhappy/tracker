@@ -9,21 +9,25 @@ import { FormControl, Validators } from '@angular/forms'
   styleUrls: ['./activity-configuration.component.sass']
 })
 export class ActivityConfigurationComponent implements OnInit {
-  public name:string = ''
+  public name:string
   public color:string = this.getRandomColor()
 
-  constructor(public dialogRef:MatDialogRef<ActivityConfigurationComponent>, @Inject(MAT_DIALOG_DATA) public data:any) {
+  constructor(
+    public dialogRef:
+    MatDialogRef<ActivityConfigurationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:any
+  ) {
   }
 
   ngOnInit() {
   }
 
   create() {
-    let obj
-    console.debug('Form', this)
-    obj = {
+    let obj = {
       name: this.name,
-      color: this.color
+      color: this.color,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
     console.info('Adding New Activity', obj)
 

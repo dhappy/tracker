@@ -1,5 +1,5 @@
 export class Event {
-  _id:string;
-  type?:string;
-  time:string;
+  public id:string
+  public type:string = 'event'
+  public time:Date
 }

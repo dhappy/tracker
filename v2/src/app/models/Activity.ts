@@ -1,26 +1,58 @@
-import { Deserializable } from './deserializable';
+import * as firebase from 'firebase/app'
+//import { filestore.Timestamp as Timestamp } from firebase
 
 export class Activity {
-  id:string
-  type:string = 'activity'
-  name:string
-  color:string
+  public id:string
+  public type:string = 'activity'
+  public name:string
+  public color:string
+  public lastEventAt:firebase.firestore.Timestamp
+  public timeDelta:string
+  private intervalId:number
 
   constructor(base:any) {
+    this.intervalId = setInterval(
+      () => this.timeDelta = this.deltaCounter(),
+      1000
+    )
+
     return Object.assign(this, base)
   }
 
-  lastEvent():string {
-  /*
-    if(this.events.length === 0) {
-      return undefined
+  private count:number = 0
+
+  deltaCounter(epoch?, now?) {
+    let out = ''
+
+    if(!epoch) epoch = this.lastEventAt
+
+    if(epoch) {
+      if(!now) now = firebase.firestore.Timestamp.now()
+
+      const dMillis = now.toMillis() - epoch.toMillis()
+      const seconds = Math.floor((dMillis / 1000) % 60)
+      const minutes = Math.floor(((dMillis / (60 * 1000)) % 60))
+      const hours = Math.floor(((dMillis / (60 * 60 * 1000)) % 24))
+      const days = Math.floor(((dMillis / (60 * 60 * 1000)) / 24))
+
+      if(days > 0) {
+        out += `${days}:`
+        if(hours < 10) out += 0
+      }
+
+      if(hours + days > 0) {
+        out += `${hours}:`
+        if(minutes < 10) out += 0
+      }
+
+      if(minutes + hours + days > 0) {
+        out += `${minutes}:`
+        if(seconds < 10) out += 0
+      }
+
+      out += seconds
     }
-    function compare(a, b) {
-      return b.time.localeCompare(a.time)
-    }
-    var events = this.events.sort(compare)
-    return this.events[0].time
-  */
-  	return 'placeholder'
+
+    return out
   }
 }
