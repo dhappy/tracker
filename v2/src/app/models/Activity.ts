@@ -1,12 +1,12 @@
 import * as firebase from 'firebase/app'
-//import { filestore.Timestamp as Timestamp } from firebase
+import Timestamp = firebase.firestore.Timestamp
 
 export class Activity {
   public id:string
   public type:string = 'activity'
   public name:string
   public color:string
-  public lastEventAt:firebase.firestore.Timestamp
+  public lastEventAt:Timestamp
   public timeDelta:string
   private intervalId:number
 
@@ -19,15 +19,13 @@ export class Activity {
     return Object.assign(this, base)
   }
 
-  private count:number = 0
-
   deltaCounter(epoch?, now?) {
     let out = ''
 
     if(!epoch) epoch = this.lastEventAt
 
     if(epoch) {
-      if(!now) now = firebase.firestore.Timestamp.now()
+      if(!now) now = Timestamp.now()
 
       const dMillis = now.toMillis() - epoch.toMillis()
       const seconds = Math.floor((dMillis / 1000) % 60)

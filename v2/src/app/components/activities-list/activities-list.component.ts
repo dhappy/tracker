@@ -45,7 +45,7 @@ export class ActivitiesListComponent implements OnInit {
             console.debug('New Activity', docRef.id)
           })
           .catch(function(error) {
-              console.error('Error: Adding Activity', error)
+            console.error('Error: Adding Activity', error)
           })
         }
       }
@@ -80,5 +80,10 @@ export class ActivitiesListComponent implements OnInit {
     .then(() => console.info('Batched Write'))
     .catch(() => console.error('Batched Write Error'))
     */
+  }
+
+  options(activity) {
+    console.log(arguments)
+    return false
   }
 }

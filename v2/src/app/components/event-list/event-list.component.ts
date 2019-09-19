@@ -7,5 +7,7 @@ import { Event } from '../../models/Event';
   styleUrls: ['./event-list.component.sass']
 })
 export class EventListComponent implements OnInit {
+	public events:any
+  
   ngOnInit() {}
 }

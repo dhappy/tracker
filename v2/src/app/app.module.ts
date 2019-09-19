@@ -19,6 +19,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { ActivitiesListComponent } from './components/activities-list/activities-list.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MccColorPickerModule } from 'material-community-components'
+import { AngularFireAuthModule } from '@angular/fire/auth'
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { MccColorPickerModule } from 'material-community-components'
     AngularFirestoreModule,
     FormsModule,
     ReactiveFormsModule,
-    MccColorPickerModule
+    MccColorPickerModule,
+    AngularFireAuthModule
   ],
   providers: [],
   bootstrap: [AppComponent],

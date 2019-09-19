@@ -1,6 +1,6 @@
 <ul id='activities' class='list'>
 <ng-template ngFor let-activity [ngForOf]='activities | async'>
-	<li class='row' (click)='createEvent(activity)'>
+	<li class='row' (tap)='createEvent(activity)' (press)='options(activity)'>
 		<div class='color' [style.background]='activity.color'></div>
 		<div class='name'>{{activity.name}}</div>
 		<div class='timer'>{{activity.timeDelta}}</div>
