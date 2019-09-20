@@ -22,6 +22,7 @@ import { MccColorPickerModule } from 'material-community-components'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
 import { MatListModule } from '@angular/material/list'
+import { CovalentDataTableModule } from '@covalent/core/data-table'
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { MatListModule } from '@angular/material/list'
     ReactiveFormsModule,
     MccColorPickerModule,
     AngularFireAuthModule,
-    MatListModule
+    MatListModule,
+    CovalentDataTableModule
   ],
   providers: [],
   bootstrap: [AppComponent],

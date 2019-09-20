@@ -1,12 +1,30 @@
-<mat-list id='activities' class='list'>
-	<ng-template ngFor let-activity [ngForOf]='activities | async'>
-		<mat-list-item class='row' (tap)='createEvent(activity)' (press)='options(activity)'>
-			<div class='color' [style.background]='activity.color'></div>
-			<div class='name'>{{activity.name}}</div>
-			<div class='timer'>{{activity.timeDelta}}</div>
-		</mat-list-item>
-	</ng-template>
-</mat-list>
+<table td-data-table id='activities'>
+  <thead>
+    <!--
+    <tr td-data-table-column-row>
+      <th td-data-table-column
+          [name]="'color'"></th>
+      <th td-data-table-column
+          [name]="'Name'"
+          [sortable]="true"
+          [active]="atomicSortBy == 'first_name'"
+          (sortChange)="sortAtomic($event)"
+          [sortOrder]="atomicSortOrder">First Name</th>
+      <th td-data-table-column
+          [name]="'last_name'">Last Name</th>
+    </tr>
+    -->
+  </thead>
+  <tbody>
+		<ng-template ngFor let-activity [ngForOf]='activities | async'>
+	    <tr td-data-table-row (tap)='createEvent(activity)' (press)='options(activity)'>
+				<td td-data-table-cell class='color' [style.background-color]='activity.color'></td>
+				<td td-data-table-cell class='name'>{{activity.name}}</td>
+				<td td-data-table-cell class='timer' [numeric]='true'>{{activity.timeDelta}}</td>
+	    </tr>
+	  </ng-template>
+  </tbody>
+</table>
 
 <button mat-fab aria-label='Add Activity' (click)='showNewActivityDialog()' class='corner-button'>
 	<mat-icon>add</mat-icon>
