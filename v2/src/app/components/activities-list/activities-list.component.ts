@@ -23,9 +23,14 @@ export class ActivitiesListComponent implements OnInit {
     public dialog:MatDialog
   ) {
     this.activities = (
-      db.collection<Activity>('activities')
+      db.collection<Activity>(
+        'activities',
+        ref => ref.orderBy('lastEventAt', 'desc')
+      )
       .valueChanges({ idField: 'id' })
       .pipe(map(activities => {
+        console.info('A', activities)
+
         let updateDeltas = () => {
           activities.forEach(activity =>
             activity.timeDelta = (
@@ -58,6 +63,7 @@ export class ActivitiesListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       activity => {
         if(activity) {
+          activity.lastEventAt = null // not returned in an ordered query if unset
           this.db.collection('activities')
           .add(activity)
           .then(function(docRef) {
@@ -103,10 +109,8 @@ export class ActivitiesListComponent implements OnInit {
 
   options(activity) {
     const dialogRef = this.dialog.open(
-      ActivityOptionsComponent
-    )
-    dialogRef.afterClosed().subscribe(
-      activity => console.debug('Dialog Closed')
+      ActivityOptionsComponent,
+      { data: activity }
     )
   }
 }

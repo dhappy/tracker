@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { Activity } from '../../models/Activity'
 
 @Component({
   selector: 'app-activity-options',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./activity-options.component.sass']
 })
 export class ActivityOptionsComponent implements OnInit {
+  constructor(
+    public dialogRef:
+    MatDialogRef<ActivityOptionsComponent>,
+    @Inject(MAT_DIALOG_DATA) public activity:Activity
+  ) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  cancel() {
+    this.dialogRef.close()
   }
-
 }

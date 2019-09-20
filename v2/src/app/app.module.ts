@@ -23,6 +23,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
 import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
 import { MatListModule } from '@angular/material/list'
 import { CovalentDataTableModule } from '@covalent/core/data-table'
+import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component'
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CovalentDataTableModule } from '@covalent/core/data-table'
     EventListRowComponent,
     ActivityConfigurationComponent,
     ActivitiesListComponent,
-    ActivityOptionsComponent
+    ActivityOptionsComponent,
+    ActivityDeletionComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,10 +52,10 @@ import { CovalentDataTableModule } from '@covalent/core/data-table'
     MccColorPickerModule,
     AngularFireAuthModule,
     MatListModule,
-    CovalentDataTableModule
+    CovalentDataTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ActivityConfigurationComponent, ActivityOptionsComponent]
+  entryComponents: [ActivityConfigurationComponent, ActivityOptionsComponent],
 })
-export class AppModule { }
+export class AppModule {}

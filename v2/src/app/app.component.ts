@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'Habit Tracker'
 
   constructor(public afAuth: AngularFireAuth) {
-    console.info('Start User', afAuth.auth.currentUser)
+    //console.info('Start User', afAuth.auth.currentUser)
     afAuth.auth.signInAnonymously().catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -23,9 +23,11 @@ export class AppComponent {
       }
     })
 
+    /*
     afAuth.auth.onAuthStateChanged(
       (user) => console.info('User', user, afAuth.auth.currentUser)
     )
+    */
   }
 
   login() {

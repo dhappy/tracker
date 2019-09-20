@@ -3,16 +3,16 @@
 <form
  #activityForm='ngForm'
  (ngSubmit)='activityForm.valid ? create() : false'>
-	<mat-dialog-content>
-		<mat-form-field>
-    	<input matInput [(ngModel)]='name' #nameInput='ngModel' name='name' placeholder='Name' (keydown)='keydown($event)' required/>
+  <mat-dialog-content>
+    <mat-form-field>
+      <input matInput [(ngModel)]='name' #nameInput='ngModel' name='name' placeholder='Name' (keydown)='keydown($event)' required/>
     </mat-form-field>
     <mat-error *ngIf='nameInput.invalid && (nameInput.dirty || nameInput.touched)'>Please provide a name.</mat-error>
-  	<mcc-color-picker [overlay]='false' [hideUsedColors]='true' [hideButtons]='true' [selectedColor]='color' (selected)='color = $event'></mcc-color-picker>
-	</mat-dialog-content>
+    <mcc-color-picker [overlay]='false' [hideUsedColors]='true' [hideButtons]='true' [selectedColor]='color' (selected)='color = $event'></mcc-color-picker>
+  </mat-dialog-content>
 
-	<mat-dialog-actions align='end'>
+  <mat-dialog-actions align='end'>
     <button class='mat-button'(click)="cancel()">Cancel</button>
     <input type='submit' class='mat-raised-button mat-primary' value='Create'/>
-	</mat-dialog-actions>
+  </mat-dialog-actions>
 </form>
