@@ -20,6 +20,8 @@ import { ActivitiesListComponent } from './components/activities-list/activities
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MccColorPickerModule } from 'material-community-components'
 import { AngularFireAuthModule } from '@angular/fire/auth'
+import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
+import { MatListModule } from '@angular/material/list'
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
     EventListComponent,
     EventListRowComponent,
     ActivityConfigurationComponent,
-    ActivitiesListComponent
+    ActivitiesListComponent,
+    ActivityOptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -44,10 +47,11 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
     FormsModule,
     ReactiveFormsModule,
     MccColorPickerModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ActivityConfigurationComponent]
+  entryComponents: [ActivityConfigurationComponent, ActivityOptionsComponent]
 })
 export class AppModule { }

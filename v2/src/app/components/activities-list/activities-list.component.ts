@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Activity } from '../../models/Activity'
 import { map } from 'rxjs/operators'
+import { ActivityOptionsComponent } from '../activity-options/activity-options.component'
 
 @Component({
   selector: 'app-activities-list',
@@ -15,6 +16,7 @@ import { map } from 'rxjs/operators'
 })
 export class ActivitiesListComponent implements OnInit {
   public activities:Observable<Activity[]>
+  private intervalId:number
 
   constructor(
     private db:AngularFirestore,
@@ -23,9 +25,26 @@ export class ActivitiesListComponent implements OnInit {
     this.activities = (
       db.collection<Activity>('activities')
       .valueChanges({ idField: 'id' })
-      .pipe(map(activities => activities.map(
-        activityObj => new Activity(activityObj)
-      )))
+      .pipe(map(activities => {
+        let updateDeltas = () => {
+          activities.forEach(activity =>
+            activity.timeDelta = (
+              Activity.deltaCounter(
+                activity.lastEventAt
+              )
+            )
+          )
+        }
+
+        clearInterval(this.intervalId)
+        this.intervalId = setInterval(
+          updateDeltas, 1000
+        )
+
+        updateDeltas()
+
+        return activities
+      }))
     )
   }
 
@@ -83,7 +102,11 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   options(activity) {
-    console.log(arguments)
-    return false
+    const dialogRef = this.dialog.open(
+      ActivityOptionsComponent
+    )
+    dialogRef.afterClosed().subscribe(
+      activity => console.debug('Dialog Closed')
+    )
   }
 }

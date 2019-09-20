@@ -1,7 +1,3 @@
-# tracker-ui
+# Tracker
 
-Frontend for a habit tracker
-
-## Testing
-
-ruby -run -e httpd . -p 8080
+Currently it tracks events as they happen. Next it will allow past events. Then predictions.

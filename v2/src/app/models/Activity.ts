@@ -8,21 +8,23 @@ export class Activity {
   public color:string
   public lastEventAt:Timestamp
   public timeDelta:string
-  private intervalId:number
 
   constructor(base:any) {
-    this.intervalId = setInterval(
-      () => this.timeDelta = this.deltaCounter(),
-      1000
-    )
+    Object.assign(this, base)
 
-    return Object.assign(this, base)
+    this.updateTimeDelta()
+
+    return this
   }
 
-  deltaCounter(epoch?, now?) {
-    let out = ''
+  updateTimeDelta() {
+    this.timeDelta = (
+      Activity.deltaCounter(this.lastEventAt)
+    )
+  }
 
-    if(!epoch) epoch = this.lastEventAt
+  public static deltaCounter(epoch, now?) {
+    let out = ''
 
     if(epoch) {
       if(!now) now = Timestamp.now()

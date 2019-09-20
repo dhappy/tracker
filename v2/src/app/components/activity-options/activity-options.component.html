@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{activity.name}}</h2>
+
+<mat-dialog-content>
+	<mat-list>
+		<a mat-list-item routerLink='`edit/${activity.id}`'>Edit</a>
+		<button mat-list-item (click)='delete(activity)'>Edit</button>
+	</mat-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align='end'>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <input type='submit' class='mat-raised-button mat-primary' value='Create'/>
+</mat-dialog-actions>
