@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators'
 @Component({
   selector: 'app-activity-deletion',
   templateUrl: './activity-deletion.component.html',
-  styleUrls: ['./activity-deletion.component.sass']
+  styleUrls: ['./activity-deletion.component.scss']
 })
 export class ActivityDeletionComponent implements OnInit {
   public activity:Observable<Activity>

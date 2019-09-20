@@ -6,7 +6,7 @@ import { FormControl, Validators } from '@angular/forms'
 @Component({
   selector: 'app-activity-configuration',
   templateUrl: './activity-configuration.component.html',
-  styleUrls: ['./activity-configuration.component.sass']
+  styleUrls: ['./activity-configuration.component.scss']
 })
 export class ActivityConfigurationComponent implements OnInit {
   public name:string

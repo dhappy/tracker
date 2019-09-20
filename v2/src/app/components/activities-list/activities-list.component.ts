@@ -12,7 +12,7 @@ import { ActivityOptionsComponent } from '../activity-options/activity-options.c
 @Component({
   selector: 'app-activities-list',
   templateUrl: './activities-list.component.html',
-  styleUrls: ['./activities-list.component.sass']
+  styleUrls: ['./activities-list.component.scss']
 })
 export class ActivitiesListComponent implements OnInit {
   public activities:Observable<Activity[]>
