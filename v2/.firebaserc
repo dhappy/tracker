@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "tracker-fecd2"
+  },
+  "targets": {
+    "tracker-fecd2": {
+      "hosting": {
+        "tracker": [
+          "tracker-fecd2"
+        ]
+      }
+    }
+  }
+}

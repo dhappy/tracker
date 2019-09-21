@@ -1,4 +1,4 @@
-<h2>Really Delete "{{activity.name}}"?</h2>
+<h2>Really Delete "{{(activity | async).name}}"?</h2>
 
 <button mat-button-raised color='warn' (click)='delete()'>Yes</button>
 <button mat-button-raised color='accent' routerLink='/'>Cancel</button>
