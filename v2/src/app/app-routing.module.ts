@@ -6,28 +6,37 @@ import { ActivityDeletionComponent } from './components/activity-deletion/activi
 
 const routes:Routes = [
 	{
-	    path: '',
-	    component: ActivitiesListComponent,
-		  resolve: {
-		    //data: CategoriesResolver
+	  path: '', redirectTo: 'activities'
+	},
+	{
+		path: 'activities',
+		component: ActivitiesListComponent,
+		children:[
+			{
+				path: ':id',
+				component: ActivityComponent,
+				children: [
+					{
+						path: '', redirectTo: 'edit'
+					},
+					{
+						path: 'edit',
+	    			component: ActivityConfigurationComponent
+	    		},
+	    		{
+	    			path: 'delete',
+				    component: ActivityDeletionComponent
+	    		}
+				]
+			},
+			{
+				path: 'new',
+				component: ActivityConfigurationComponent
 			}
+		]
 	},
 	// There is a nested syntax that's prettier
 	// https://angular.io/guide/router#resolve-guard
-	{
-	    path: 'activities/:activityId/edit',
-	    component: ActivityConfigurationComponent,
-	    resolve: {
-	      //data: CategoryQuestionsResolver
-	  	}
-	},
-	{
-	    path: 'activities/:activityId/delete',
-	    component: ActivityDeletionComponent,
-	    resolve: {
-	      //data: CategoryQuestionsResolver
-	  	}
-	},
 ]
 
 @NgModule({

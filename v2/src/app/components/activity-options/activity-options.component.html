@@ -9,7 +9,7 @@
 			<button mat-raised-button color='primary' routerLink='activities/{{activity.id}}/edit'>Edit</button>
 		</mat-list-item>
 		<mat-list-item>
-			<button mat-raised-button color='warn' routerLink='activities/{{activity.id}}/delete'>Delete</button>
+			<button mat-raised-button color='warn' routerLink='activities/{{activity.id}}/delete' (click)='delete()'>Delete</button>
 		</mat-list-item>
 		<mat-list-item>
 		  <button mat-raised-button color='accent' (click)="cancel()">Cancel</button>

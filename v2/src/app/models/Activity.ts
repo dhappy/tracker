@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app'
-import Timestamp = firebase.firestore.Timestamp
+//import Timestamp = firebase.firestore.Timestamp // fails in production
+type Timestamp = firebase.firestore.Timestamp
 
 export class Activity {
   public id:string
@@ -27,9 +28,9 @@ export class Activity {
     let out = ''
 
     if(epoch) {
-      if(!now) now = Timestamp.now()
+      if(!now) now = new Date()
 
-      const dMillis = now.toMillis() - epoch.toMillis()
+      const dMillis = now.getTime() - epoch.toMillis()
       const seconds = Math.floor((dMillis / 1000) % 60)
       const minutes = Math.floor(((dMillis / (60 * 1000)) % 60))
       const hours = Math.floor(((dMillis / (60 * 60 * 1000)) % 24))

@@ -19,4 +19,8 @@ export class ActivityOptionsComponent implements OnInit {
   cancel() {
     this.dialogRef.close()
   }
+
+  delete() {
+    this.dialogRef.close()
+  }
 }
