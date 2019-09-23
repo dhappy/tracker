@@ -4,6 +4,7 @@ import { ActivityComponent } from './components/activity/activity.component'
 import { ActivitiesListComponent } from './components/activities-list/activities-list.component'
 import { ActivityConfigurationComponent } from './components/activity-configuration/activity-configuration.component'
 import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component'
+import { EventsListComponent } from './components/events-list/events-list.component'
 
 const routes:Routes = [
 	{
@@ -42,6 +43,15 @@ const routes:Routes = [
 				]
 			},
 		]
+	},
+	{
+		path: 'events',
+		children:[
+			{
+				path: 'events',
+				component: EventsListComponent,
+			},
+		],
 	},
 	// There is a nested syntax that's prettier
 	// https://angular.io/guide/router#resolve-guard

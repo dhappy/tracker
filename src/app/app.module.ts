@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { EventListComponent } from './components/event-list/event-list.component'
-import { EventListRowComponent } from './components/event-list-row/event-list-row.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
 import { MatButtonModule } from '@angular/material/button'
@@ -25,18 +24,21 @@ import { MatListModule } from '@angular/material/list'
 import { CovalentDataTableModule } from '@covalent/core/data-table'
 import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component';
 import { ActivityComponent } from './components/activity/activity.component'
-import { DatabaseService } from './services/database.service'
+import { DatabaseService } from './services/database.service';
+import { EventsListComponentComponent } from './components/events-list-component/events-list-component.component';
+import { EventsListComponent } from './components/events-list/events-list.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     EventListComponent,
-    EventListRowComponent,
     ActivityConfigurationComponent,
     ActivitiesListComponent,
     ActivityOptionsComponent,
     ActivityDeletionComponent,
     ActivityComponent,
+    EventsListComponentComponent,
+    EventsListComponent,
   ],
   imports: [
     BrowserModule,
