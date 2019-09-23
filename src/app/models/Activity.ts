@@ -16,7 +16,7 @@ export class Activity {
     this.updateTimeDelta()
   }
 
-  updateTimeDelta() {
+  public updateTimeDelta():void {
     this.timeDelta = (
       Activity.deltaCounter(this.lastEventAt)
     )
@@ -60,4 +60,14 @@ export class Activity {
 
     return out
   }
+
+  getRandomColor() {
+    var letters = '0123456789ABCDEF'
+    var color = '#'
+    for(var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+  }
+
 }

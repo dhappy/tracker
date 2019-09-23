@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject, Optional } from '@angular/core'
+import { Component, OnInit, Inject, Optional, Input } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import * as moment from 'moment'
 import { FormControl, Validators } from '@angular/forms'
-import { ActivityComponent } from '../../components/activity/activity.component'
-import { FirebaseService } from '../../services/firebase.service'
+import { ActivityComponent } from '../activity/activity.component'
+import { DatabaseService } from '../../services/database.service'
+import { Activity } from '../../models/Activity'
 
 @Component({
   selector: 'app-activity-configuration',
@@ -12,15 +13,15 @@ import { FirebaseService } from '../../services/firebase.service'
 })
 export class ActivityConfigurationComponent implements OnInit {
   public name:string
-  public color:string = this.getRandomColor()
+  public color:string
 
   private container:ActivityComponent
 
   constructor(
     @Optional() container:ActivityComponent,
-    firebase:FirebaseService
+    public db:DatabaseService
   ) {
-    this.container = container
+    this.container = container // necessary?
   }
 
   ngOnInit() {
@@ -43,14 +44,5 @@ export class ActivityConfigurationComponent implements OnInit {
     if(evt.keyCode == 13) {
       this.create()
     }
-  }
-
-  getRandomColor() {
-    var letters = '0123456789ABCDEF'
-    var color = '#'
-    for(var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
-    }
-    return color
   }
 }

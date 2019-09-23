@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 import { Activity } from '../../models/Activity'
+import { Observable } from 'rxjs'
+import { DatabaseService } from '../../services/database.service'
 
 @Component({
   selector: 'app-activity',
@@ -8,12 +10,16 @@ import { Activity } from '../../models/Activity'
   styleUrls: ['./activity.component.scss']
 })
 export class ActivityComponent implements OnInit {
-  public activity:Activity = new Activity()
+  public activity:Observable<Activity>
 
-  constructor(private route:ActivatedRoute) {}
+  constructor(
+    private route:ActivatedRoute,
+    public db:DatabaseService
+  ) {}
 
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id')
-    console.info('AId', id)
+
+    this.activity = this.db.getActivity(id)
   }
 }

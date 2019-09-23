@@ -8,6 +8,7 @@ import { Observable } from 'rxjs'
 import { Activity } from '../../models/Activity'
 import { map } from 'rxjs/operators'
 import { ActivityOptionsComponent } from '../activity-options/activity-options.component'
+import { DatabaseService } from '../../services/database.service'
 
 @Component({
   selector: 'app-activities-list',
@@ -19,24 +20,16 @@ export class ActivitiesListComponent implements OnInit {
   private intervalId:number
 
   constructor(
-    private db:AngularFirestore,
+    private db:DatabaseService,
     public dialog:MatDialog
   ) {
     this.activities = (
-      db.collection<Activity>(
-        'activities',
-        ref => ref.orderBy('lastEventAt', 'desc')
-      )
-      .valueChanges({ idField: 'id' })
-      .pipe(map(activities => {
-        console.info('A', activities)
-
+      this.db.listActivities()
+      .pipe(map(acts => {
         let updateDeltas = () => {
-          activities.forEach(activity =>
-            activity.timeDelta = (
-              Activity.deltaCounter(
-                activity.lastEventAt
-              )
+          acts.forEach(act =>
+            act.timeDelta = Activity.deltaCounter(
+              act.lastEventAt
             )
           )
         }
@@ -48,7 +41,7 @@ export class ActivitiesListComponent implements OnInit {
 
         updateDeltas()
 
-        return activities
+        return acts
       }))
     )
   }
@@ -62,17 +55,6 @@ export class ActivitiesListComponent implements OnInit {
     )
     dialogRef.afterClosed().subscribe(
       activity => {
-        if(activity) {
-          activity.lastEventAt = null // not returned in an ordered query if unset
-          this.db.collection('activities')
-          .add(activity)
-          .then(function(docRef) {
-            console.debug('New Activity', docRef.id)
-          })
-          .catch(function(error) {
-            console.error('Error: Adding Activity', error)
-          })
-        }
       }
     )
   }
@@ -85,26 +67,7 @@ export class ActivitiesListComponent implements OnInit {
       updatedAt: now
     }
 
-    // ToDo: Handle failed writes. Currently the library claims there is no batch method.
-
-    //const batch = this.db.batch()
-    const eventsRef = (
-      this.db.collection(`activities/${activity.id}/events`)
-    )
-    const activityRef = (
-      this.db.collection('activities').doc(activity.id)
-    )
-
-    eventsRef.add(event)
-    activityRef.update({ lastEventAt: now })
-
-    /*
-    batch.add(eventsRef, event)
-    batch.update(activityRef, { lastEventAt: now })
-    batch.commit
-    .then(() => console.info('Batched Write'))
-    .catch(() => console.error('Batched Write Error'))
-    */
+    this.db.addEvent(activity, event)
   }
 
   options(activity) {

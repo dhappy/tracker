@@ -25,7 +25,7 @@ import { MatListModule } from '@angular/material/list'
 import { CovalentDataTableModule } from '@covalent/core/data-table'
 import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component';
 import { ActivityComponent } from './components/activity/activity.component'
-import { FirebaseService } from './services/firebase.service'
+import { DatabaseService } from './services/database.service'
 
 @NgModule({
   declarations: [
@@ -57,7 +57,7 @@ import { FirebaseService } from './services/firebase.service'
     MatListModule,
     CovalentDataTableModule,
   ],
-  providers: [FirebaseService],
+  providers: [DatabaseService],
   bootstrap: [AppComponent],
   entryComponents: [ActivityConfigurationComponent, ActivityOptionsComponent],
 })
