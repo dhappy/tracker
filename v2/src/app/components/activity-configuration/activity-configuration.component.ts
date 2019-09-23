@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core'
+import { Component, OnInit, Inject, Optional } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import * as moment from 'moment'
 import { FormControl, Validators } from '@angular/forms'
+import { ActivityComponent } from '../../components/activity/activity.component'
+import { FirebaseService } from '../../services/firebase.service'
 
 @Component({
   selector: 'app-activity-configuration',
@@ -12,14 +14,19 @@ export class ActivityConfigurationComponent implements OnInit {
   public name:string
   public color:string = this.getRandomColor()
 
+  private container:ActivityComponent
+
   constructor(
-    public dialogRef:
-    MatDialogRef<ActivityConfigurationComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:any
+    @Optional() container:ActivityComponent,
+    firebase:FirebaseService
   ) {
+    this.container = container
   }
 
   ngOnInit() {
+    if(this.container) {
+      console.info('P2', this.container.activity)//, this.parent.activity)
+    }
   }
 
   create() {
@@ -30,14 +37,7 @@ export class ActivityConfigurationComponent implements OnInit {
       updatedAt: new Date()
     }
     console.info('Adding New Activity', obj)
-
-  	this.dialogRef.close(obj)
   }
-
-  cancel() {
-  	this.dialogRef.close()
-  }
-
 
   keydown(evt) {
     if(evt.keyCode == 13) {

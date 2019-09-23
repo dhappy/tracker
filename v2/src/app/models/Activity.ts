@@ -10,12 +10,10 @@ export class Activity {
   public lastEventAt:Timestamp
   public timeDelta:string
 
-  constructor(base:any) {
+  constructor(base?:any) {
     Object.assign(this, base)
 
     this.updateTimeDelta()
-
-    return this
   }
 
   updateTimeDelta() {
@@ -37,21 +35,27 @@ export class Activity {
       const days = Math.floor(((dMillis / (60 * 60 * 1000)) / 24))
 
       if(days > 0) {
-        out += `${days}:`
+        out += `${days}ᴅ`
         if(hours < 10) out += 0
       }
 
       if(hours + days > 0) {
-        out += `${hours}:`
+        out += `${hours}ʜ`
         if(minutes < 10) out += 0
       }
 
       if(minutes + hours + days > 0) {
-        out += `${minutes}:`
-        if(seconds < 10) out += 0
+        out += `${minutes}`
+
+        if(days == 0) {
+          out += ':'
+          if(seconds < 10) out += 0
+        }
       }
 
-      out += seconds
+      if(days == 0) {
+        out += seconds
+      }
     }
 
     return out

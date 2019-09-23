@@ -1,18 +1,15 @@
-<h2 mat-dialog-title>Create Activity</h2>
+<h2>Create Activity</h2>
 
 <form
  #activityForm='ngForm'
  (ngSubmit)='activityForm.valid ? create() : false'>
-  <mat-dialog-content>
-    <mat-form-field>
-      <input matInput [(ngModel)]='name' #nameInput='ngModel' name='name' placeholder='Name' (keydown)='keydown($event)' required/>
-    </mat-form-field>
-    <mat-error *ngIf='nameInput.invalid && (nameInput.dirty || nameInput.touched)'>Please provide a name.</mat-error>
-    <mcc-color-picker [overlay]='false' [hideUsedColors]='true' [hideButtons]='true' [selectedColor]='color' (selected)='color = $event'></mcc-color-picker>
-  </mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]='name' #nameInput='ngModel' name='name' placeholder='Name' (keydown)='keydown($event)' required/>
+  </mat-form-field>
+  <mat-error *ngIf='nameInput.invalid && (nameInput.dirty || nameInput.touched)'>Please provide a name.</mat-error>
 
-  <mat-dialog-actions align='end'>
-    <button class='mat-button'(click)="cancel()">Cancel</button>
-    <input type='submit' class='mat-raised-button mat-primary' value='Create'/>
-  </mat-dialog-actions>
+  <mcc-color-picker [overlay]='false' [hideUsedColors]='true' [hideButtons]='true' [selectedColor]='color' (selected)='color = $event'></mcc-color-picker>
+
+  <button mat-button routerLink='/'>Cancel</button>
+  <button mat-raised-button type='submit' color='primary'>Create</button>
 </form>

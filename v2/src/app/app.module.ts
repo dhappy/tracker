@@ -23,7 +23,9 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
 import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
 import { MatListModule } from '@angular/material/list'
 import { CovalentDataTableModule } from '@covalent/core/data-table'
-import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component'
+import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component';
+import { ActivityComponent } from './components/activity/activity.component'
+import { FirebaseService } from './services/firebase.service'
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { ActivityDeletionComponent } from './components/activity-deletion/activi
     ActivitiesListComponent,
     ActivityOptionsComponent,
     ActivityDeletionComponent,
+    ActivityComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,7 @@ import { ActivityDeletionComponent } from './components/activity-deletion/activi
     MatListModule,
     CovalentDataTableModule,
   ],
-  providers: [],
+  providers: [FirebaseService],
   bootstrap: [AppComponent],
   entryComponents: [ActivityConfigurationComponent, ActivityOptionsComponent],
 })
