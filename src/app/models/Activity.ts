@@ -4,7 +4,6 @@ type Timestamp = firebase.firestore.Timestamp
 
 export class Activity {
   public id:string
-  public type:string = 'activity'
   public name:string
   public color:string
   public lastEventAt:Timestamp
