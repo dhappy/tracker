@@ -47,7 +47,7 @@ import { EventsListComponent } from './components/events-list/events-list.compon
     MatFormFieldModule,
     MatInputModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     FormsModule,
     ReactiveFormsModule,
     MccColorPickerModule,

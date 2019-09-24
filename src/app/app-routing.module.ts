@@ -48,7 +48,7 @@ const routes:Routes = [
 		path: 'events',
 		children:[
 			{
-				path: 'events',
+				path: '',
 				component: EventsListComponent,
 			},
 		],

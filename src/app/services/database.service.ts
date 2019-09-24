@@ -2,6 +2,9 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Activity } from '../models/Activity'
+import { Instance } from '../models/Instance'
+import { map } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 @Injectable()
 export class DatabaseService {
@@ -11,6 +14,10 @@ export class DatabaseService {
     console.info('AId', id)
 
     return null
+  }
+
+  public get(path:string):Observable<any> {
+    return this.db.doc(path).valueChanges()
   }
 
   public addActivity(activity) {
@@ -40,6 +47,8 @@ export class DatabaseService {
   }
 
   public addEvent(activity, event) {
+    event.parentId = activity.id // There is no way to get the parent of a document on a collectionGroup
+
     // ToDo: Handle failed writes. Currently the library claims there is no batch method.
 
     //const batch = this.db.batch()
@@ -60,5 +69,48 @@ export class DatabaseService {
     .then(() => console.info('Batched Write'))
     .catch(() => console.error('Batched Write Error'))
     */
+  }
+
+  public getEvents():Observable<Instance[]> {
+    return (
+      of([])
+      /*
+      this.db
+      .collectionGroup<Instance>(
+        'events',
+        ref => ref.orderBy('time', 'desc')
+      )
+      .snapshotChanges()
+      .pipe(map(changes => {
+        let klass = this
+
+        return changes.map(cng => {
+          let doc = cng.payload.doc
+          let inst = new Instance(doc.data())
+
+          inst.parentId = doc.ref.parent.parent.path
+
+          Object.defineProperty(
+            inst,
+            'name',
+            {
+              get: function():Observable<string> {
+                return (
+                  klass.db.doc<Activity>(this.parentId)
+                  .valueChanges().pipe(map(
+                    doc => doc.name
+                  ))
+                )
+              }
+            }
+          )
+
+          console.info('IN', inst)
+
+          return inst
+        })
+      }))
+      */
+    )
   }
 }

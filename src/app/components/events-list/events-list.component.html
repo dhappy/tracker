@@ -2,11 +2,11 @@
 	<ng-template ngFor let-day [ngForOf]='days | async'>
 		<li>
 			<div>{{day.displayText}}</div>
-			<ol *ngIf='(day.events | async).length > 0'>
-				<ng-template ngFor let-event [ngForOf]='day.events | async'>
+			<ol *ngIf='day.events.length > 0'>
+				<ng-template ngFor let-event [ngForOf]='day.events'>
 					<li>
 						<span>{{event.name}}</span>
-						<span>{{event.time}}</span>
+						<span>{{event.displayTime}}</span>
 					</li>
 				</ng-template>
 			</ol>

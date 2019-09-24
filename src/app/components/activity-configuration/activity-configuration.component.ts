@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, Optional, Input } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import * as moment from 'moment'
 import { FormControl, Validators } from '@angular/forms'
 import { ActivityComponent } from '../activity/activity.component'
 import { DatabaseService } from '../../services/database.service'
