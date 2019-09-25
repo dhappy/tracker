@@ -38,7 +38,7 @@ export class DatabaseService {
 
   public updateActivity(obj) {}
 
-  public listActivities():Observable<Activity[]> {
+  public getActivities():Observable<Activity[]> {
     return this.db.collection<Activity>(
       'activities',
       ref => ref.orderBy('lastEventAt', 'desc')
@@ -73,8 +73,6 @@ export class DatabaseService {
 
   public getEvents():Observable<Instance[]> {
     return (
-      of([])
-      /*
       this.db
       .collectionGroup<Instance>(
         'events',
@@ -90,11 +88,13 @@ export class DatabaseService {
 
           inst.parentId = doc.ref.parent.parent.path
 
+/*
           Object.defineProperty(
             inst,
             'name',
             {
               get: function():Observable<string> {
+                console.info('GOT')
                 return (
                   klass.db.doc<Activity>(this.parentId)
                   .valueChanges().pipe(map(
@@ -105,12 +105,14 @@ export class DatabaseService {
             }
           )
 
+*/
+          inst.name = 'test'
           console.info('IN', inst)
+          //inst.name.subscribe(name => console.info('Nm', name))
 
           return inst
         })
       }))
-      */
     )
   }
 }

@@ -24,7 +24,7 @@ export class ActivitiesListComponent implements OnInit {
     public dialog:MatDialog
   ) {
     this.activities = (
-      this.db.listActivities()
+      this.db.getActivities()
       .pipe(map(acts => {
         let updateDeltas = () => {
           acts.forEach(act =>
