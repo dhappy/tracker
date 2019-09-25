@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
+import { DocumentChangeAction } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Activity } from '../models/Activity'
 import { Instance } from '../models/Instance'
@@ -8,29 +9,43 @@ import { of } from 'rxjs'
 
 @Injectable()
 export class DatabaseService {
+  public _userId:string
+  public prefix:string = ''
+
   public constructor(public db:AngularFirestore) {}
 
-  public getActivity(id):Observable<Activity> {
-    console.info('AId', id)
-
-    return null
+  set userId(id) {
+    this._userId = id
+    if(id && id.length > 0) {
+      this.prefix = `/users/${id}`
+    } else {
+      this.prefix = ''
+    }
+    console.info('PRE', this.prefix)
   }
 
-  public get(path:string):Observable<any> {
-    return this.db.doc(path).valueChanges()
+  public getActivity(id:string):Observable<Activity> {
+    return (
+      this.db
+      .doc<Activity>(`${this.prefix}/activities/${id}`)
+      .valueChanges()
+    )
+  }
+
+  public get<T>(path:string):Observable<T> {
+    return this.db.doc<T>(path).valueChanges()
   }
 
   public addActivity(activity) {
     if(activity) {
       activity.lastEventAt = null // not returned in an ordered query if unset
-      this.db.collection('activities')
+
+      this.db.collection(`${this.prefix}/activities`)
       .add(activity)
       .then(function(docRef) {
         console.debug('New Activity', docRef.id)
       })
-      .catch(function(error) {
-        console.error('Error: Adding Activity', error)
-      })
+      .catch(error => console.error('Error Adding Activity', error))
     }
   }
 
@@ -40,7 +55,7 @@ export class DatabaseService {
 
   public getActivities():Observable<Activity[]> {
     return this.db.collection<Activity>(
-      'activities',
+      `${this.prefix}/activities`,
       ref => ref.orderBy('lastEventAt', 'desc')
     )
     .valueChanges({ idField: 'id' })
@@ -53,10 +68,14 @@ export class DatabaseService {
 
     //const batch = this.db.batch()
     const eventsRef = (
-      this.db.collection(`activities/${activity.id}/events`)
+      this.db.collection(
+        `${this.prefix}/activities/${activity.id}/events`
+      )
     )
     const activityRef = (
-      this.db.collection('activities').doc(activity.id)
+      this.db
+      .collection(`${this.prefix}/activities`)
+      .doc(activity.id)
     )
 
     eventsRef.add(event)
@@ -72,15 +91,22 @@ export class DatabaseService {
   }
 
   public getEvents():Observable<Instance[]> {
-    return (
+    let events:Observable<DocumentChangeAction<Instance>[]>
+
+    events = (
       this.db
       .collectionGroup<Instance>(
         'events',
         ref => ref.orderBy('time', 'desc')
       )
       .snapshotChanges()
-      .pipe(map(changes => {
+    )
+
+    return (
+      events.pipe(map(changes => {
         let klass = this
+
+        console.info('CNGs', changes)
 
         return changes.map(cng => {
           let doc = cng.payload.doc

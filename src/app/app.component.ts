@@ -1,6 +1,8 @@
 import { Component } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { auth } from 'firebase/app'
+import { DatabaseService } from './services/database.service'
+import { Breadcrumb } from './models/Breadcrumb'
 
 @Component({
   selector: 'app-root',
@@ -8,33 +10,29 @@ import { auth } from 'firebase/app'
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Habit Tracker'
+  public crumbs:Breadcrumb[]
 
-  constructor(public afAuth: AngularFireAuth) {
-    //console.info('Start User', afAuth.auth.currentUser)
-    afAuth.auth.signInAnonymously().catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-
-      if (errorCode === 'auth/operation-not-allowed') {
-        alert('You must enable Anonymous auth in the Firebase Console.');
-      } else {
-        console.error('Anonymous Login Error', error);
-      }
-    })
-
-    /*
+  constructor(
+    public afAuth:AngularFireAuth,
+    public db:DatabaseService
+  ) {
     afAuth.auth.onAuthStateChanged(
-      (user) => console.info('User', user, afAuth.auth.currentUser)
+      user => db.userId = !user ? undefined : user.uid
     )
-    */
   }
 
   login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    this.afAuth.auth
+    .signInWithPopup(new auth.GoogleAuthProvider())
+    .then(
+      result => this.db.userId = result.user.uid
+    )
+    .catch(
+      error => console.error('Auth Error', error)
+    )
   }
 
   logout() {
-    this.afAuth.auth.signOut();
+    this.afAuth.auth.signOut()
   }
 }

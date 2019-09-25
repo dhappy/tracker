@@ -21,7 +21,6 @@ export class EventsListComponent implements OnInit {
     this.days = this.db.getEvents().pipe(map(
       (evts:Instance[]) => this.groupByDay(evts)
     ))
-    this.days.subscribe((days:Day[]):void => console.info('Ds', days))
   }
 
   groupByDay(events:Instance[]) {

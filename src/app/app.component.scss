@@ -1,0 +1,17 @@
+#content {
+	margin-top: 4em;
+}
+
+.mat-sidenav-container {
+	min-height: 100vh;
+}
+
+.mat-toolbar {
+	position: fixed;
+
+	button {
+		margin-right: .25em;
+		min-width: 2em;
+		padding: 0.25em 0.75em;
+	}
+}
