@@ -88,25 +88,14 @@ export class DatabaseService {
 
           inst.parentId = doc.ref.parent.parent.path
 
-/*
-          Object.defineProperty(
-            inst,
-            'name',
-            {
-              get: function():Observable<string> {
-                console.info('GOT')
-                return (
-                  klass.db.doc<Activity>(this.parentId)
-                  .valueChanges().pipe(map(
-                    doc => doc.name
-                  ))
-                )
-              }
+          klass.db.doc<Activity>(inst.parentId)
+          .valueChanges().subscribe(
+            doc => {
+              inst.name = doc.name
+              inst.color = doc.color
             }
           )
 
-*/
-          inst.name = 'test'
           console.info('IN', inst)
           //inst.name.subscribe(name => console.info('Nm', name))
 
