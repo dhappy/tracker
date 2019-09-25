@@ -1,1 +1,30 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+  <mat-sidenav #menu opened mode="side">
+  	<mat-list>
+  		<mat-list-item routerLink='/activities' (click)='menu.toggle()'>
+  			<mat-icon matListIcon>directions_run</mat-icon>
+  			<span>Activities</span>
+  		</mat-list-item>
+  		<mat-list-item routerLink='/events' (click)='menu.toggle()'>
+  			<mat-icon matListIcon>event</mat-icon>
+  			<span>Events</span>
+  		</mat-list-item>
+  		<mat-list-item routerLink='/settings' (click)='menu.toggle()'>
+  			<mat-icon matListIcon>settings</mat-icon>
+  			<span>Settings</span>
+  		</mat-list-item>
+		</mat-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+		<mat-toolbar>
+			<button mat-raised-button color='primary' (click)='menu.toggle()'>
+				<mat-icon>menu</mat-icon>
+			</button>
+  		<span>Tracker</span>
+		</mat-toolbar>
+		<div id='content'>
+			<router-outlet></router-outlet>
+		</div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

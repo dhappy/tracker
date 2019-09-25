@@ -1,10 +1,10 @@
-<ol>
+<ol id='days' class='list'>
 	<ng-template ngFor let-day [ngForOf]='days | async'>
 		<li>
-			<div>{{day.displayText}}</div>
-			<ol *ngIf='day.events.length > 0'>
+			<div class='day'>{{day.displayText}}</div>
+			<ol *ngIf='day.events.length > 0' class='events'>
 				<ng-template ngFor let-event [ngForOf]='day.events'>
-					<li>
+					<li class='colored-row'>
 						<span class='color' [style.background-color]='event.color'></span>
 						<span class='name'>{{event.name}}</span>
 						<span class='time'>{{event.displayTime}}</span>

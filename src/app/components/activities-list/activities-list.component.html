@@ -1,30 +1,12 @@
-<table td-data-table id='activities'>
-  <thead>
-    <!--
-    <tr td-data-table-column-row>
-      <th td-data-table-column
-          [name]="'color'"></th>
-      <th td-data-table-column
-          [name]="'Name'"
-          [sortable]="true"
-          [active]="atomicSortBy == 'first_name'"
-          (sortChange)="sortAtomic($event)"
-          [sortOrder]="atomicSortOrder">First Name</th>
-      <th td-data-table-column
-          [name]="'last_name'">Last Name</th>
-    </tr>
-    -->
-  </thead>
-  <tbody>
-		<ng-template ngFor let-activity [ngForOf]='activities | async'>
-	    <tr td-data-table-row (tap)='createEvent(activity)' (press)='options(activity)'>
-				<td td-data-table-cell class='color' [style.background-color]='activity.color'></td>
-				<td td-data-table-cell class='name'>{{activity.name}}</td>
-				<td td-data-table-cell class='timer' [numeric]='true'>{{activity.timeDelta}}</td>
-	    </tr>
-	  </ng-template>
-  </tbody>
-</table>
+<ol id='activities' class='list'>
+	<ng-template ngFor let-activity [ngForOf]='activities | async'>
+    <li (tap)='createEvent(activity)' (press)='options(activity)' class='colored-row'>
+			<span class='color' [style.background-color]='activity.color'></span>
+			<span class='name'>{{activity.name}}</span>
+			<span class='time'>{{activity.timeDelta}}</span>
+    </li>
+  </ng-template>
+</ol>
 
 <a mat-fab aria-label='Add Activity' routerLink='new' class='corner-button'>
 	<mat-icon>add</mat-icon>

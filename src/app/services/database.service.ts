@@ -96,9 +96,6 @@ export class DatabaseService {
             }
           )
 
-          console.info('IN', inst)
-          //inst.name.subscribe(name => console.info('Nm', name))
-
           return inst
         })
       }))

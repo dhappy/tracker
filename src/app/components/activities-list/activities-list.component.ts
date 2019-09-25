@@ -49,16 +49,6 @@ export class ActivitiesListComponent implements OnInit {
   ngOnInit() {
   }
 
-  showNewActivityDialog() {
-    const dialogRef = this.dialog.open(
-      ActivityConfigurationComponent
-    )
-    dialogRef.afterClosed().subscribe(
-      activity => {
-      }
-    )
-  }
-
   createEvent(activity) {
     let now = new Date
     let event = {

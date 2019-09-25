@@ -36,7 +36,7 @@ export class ActivityConfigurationComponent implements OnInit {
       createdAt: new Date(),
       updatedAt: new Date()
     }
-    console.info('Adding New Activity', obj)
+    this.db.addActivity(obj)
   }
 
   keydown(evt) {

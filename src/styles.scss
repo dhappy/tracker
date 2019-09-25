@@ -11,3 +11,57 @@ body {
 	right: 1em;
 	bottom: 1em;
 }
+
+.colored-row {
+	display: flex;
+	align-items: stretch;
+	border-bottom: 1px solid rgba(0,0,0,0.5);
+
+	&:hover {
+		background-color: rgba(0, 0, 255, 0.1);
+	}
+
+	span {
+		display: flex;
+		flex: 0;
+		padding: .25em;
+
+		&.name {
+			flex: 1;
+		}
+
+		&.time {
+			justify-content: flex-end;
+		}
+
+		&.color {
+			min-width: 1em;
+		}
+	}
+}
+
+ol.list {
+	list-style: none;
+	font-size: 1.5em;
+	margin-top: 1.5em;
+
+	&, & ol {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+
+#content {
+	margin-top: 3.75em;
+}
+
+.mat-toolbar {
+	position: fixed;
+
+	button {
+		margin-right: .25em;
+		min-width: 2em;
+		padding: 0.25em 0.75em;
+	}
+}

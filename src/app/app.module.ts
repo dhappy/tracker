@@ -20,11 +20,12 @@ import { MccColorPickerModule } from 'material-community-components'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
 import { MatListModule } from '@angular/material/list'
-import { CovalentDataTableModule } from '@covalent/core/data-table'
 import { ActivityDeletionComponent } from './components/activity-deletion/activity-deletion.component';
 import { ActivityComponent } from './components/activity/activity.component'
-import { DatabaseService } from './services/database.service';
+import { DatabaseService } from './services/database.service'
 import { EventsListComponent } from './components/events-list/events-list.component'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatToolbarModule } from '@angular/material/toolbar'
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { EventsListComponent } from './components/events-list/events-list.compon
     MccColorPickerModule,
     AngularFireAuthModule,
     MatListModule,
-    CovalentDataTableModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ],
   providers: [DatabaseService],
   bootstrap: [AppComponent],
