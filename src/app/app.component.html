@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav #menu opened mode="side">
+  <mat-sidenav #menu closed mode="side">
   	<mat-list>
   		<mat-list-item routerLink='/activities' (click)='menu.toggle()'>
   			<mat-icon matListIcon>directions_run</mat-icon>
@@ -29,7 +29,11 @@
 			<button mat-raised-button color='primary' (click)='menu.toggle()'>
 				<mat-icon>menu</mat-icon>
 			</button>
-  		<span>Tracker</span>
+      <td-breadcrumbs>
+        <ng-template ngFor let-crumb [ngForOf]='crumbs'>
+          <a td-breadcrumb [routerLink]='crumb.link'>{{crumb.text}}</a>
+        </ng-template>
+      </td-breadcrumbs>
 		</mat-toolbar>
 		<div id='content'>
 			<router-outlet></router-outlet>

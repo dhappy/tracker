@@ -50,3 +50,22 @@ ol.list {
 		padding: 0;
 	}
 }
+
+.mat-action-list.options {
+	display: flex;
+
+	.mat-list-item {
+		display: flex;
+		justify-content: flex-end;
+		flex: 0;
+		padding: 0.25em;
+
+		&:first-child {
+			flex: 1;
+		}
+
+		.mat-list-item-content {
+			padding: 0 .25em 0 0;
+		}
+	}
+}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { auth } from 'firebase/app'
 import { DatabaseService } from './services/database.service'
@@ -9,8 +9,8 @@ import { Breadcrumb } from './models/Breadcrumb'
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  public crumbs:Breadcrumb[]
+export class AppComponent implements OnInit {
+  public crumbs:Breadcrumb[] = []
 
   constructor(
     public afAuth:AngularFireAuth,
@@ -19,6 +19,13 @@ export class AppComponent {
     afAuth.auth.onAuthStateChanged(
       user => db.userId = !user ? undefined : user.uid
     )
+  }
+
+  ngOnInit() {
+    console.info('Cr', this)
+    this.crumbs = [
+      { link: '/', text: 'Tracker'}
+    ]
   }
 
   login() {

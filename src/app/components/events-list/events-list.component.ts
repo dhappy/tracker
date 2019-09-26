@@ -13,17 +13,22 @@ import { Instance } from '../../models/Instance'
   styleUrls: ['./events-list.component.scss']
 })
 export class EventsListComponent implements OnInit {
-  public days:Observable<Day[]>
+  public days:Day[]
 
   constructor(public db:DatabaseService) {}
 
   ngOnInit() {
-    this.days = this.db.getEvents().pipe(map(
-      (evts:Instance[]) => this.groupByDay(evts)
-    ))
+    console.info('OnInit', this.db.getEvents())
+    this.db.getEvents().subscribe(
+      (evts:Instance[]) => {
+        this.days = this.groupByDay(evts)
+      }
+    )
   }
 
-  groupByDay(events:Instance[]) {
+  groupByDay(events:Instance[]):Day[] {
+    console.info('gBD', events)
+
     let byDay = (
       events.reduce((ret:any, event:Instance) => {
         let day = (

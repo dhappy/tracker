@@ -26,6 +26,7 @@ import { DatabaseService } from './services/database.service'
 import { EventsListComponent } from './components/events-list/events-list.component'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatToolbarModule } from '@angular/material/toolbar'
+import { CovalentBreadcrumbsModule } from '@covalent/core/breadcrumbs'
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
     MatListModule,
     MatSidenavModule,
     MatToolbarModule,
+    CovalentBreadcrumbsModule,
   ],
   providers: [DatabaseService],
   bootstrap: [AppComponent],

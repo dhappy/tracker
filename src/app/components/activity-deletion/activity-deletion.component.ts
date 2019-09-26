@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Host } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Router } from '@angular/router'
 import { Activity } from '../../models/Activity'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { ActivityComponent } from '../activity/activity.component'
+import { AppComponent } from '../../app.component'
+import { DatabaseService } from '../../services/database.service'
 
 @Component({
   selector: 'app-activity-deletion',
@@ -14,16 +16,24 @@ export class ActivityDeletionComponent implements OnInit {
   public activity:Observable<Activity>
 
   constructor(
-    @Host() private parent:ActivityComponent
-  ) {
-  }
+    @Host() private parent:ActivityComponent,
+    @Host() private app:AppComponent,
+    public db:DatabaseService,
+    public router:Router
+  ) {}
 
   ngOnInit() {
     this.activity = this.parent.activity
-    this.activity.subscribe(act => console.info('ACT', act))
+
+    this.app.crumbs.push(
+      { link: 'delete', text: 'Delete' }
+    )
   }
 
   delete() {
-    console.log('D', this.activity)
+    this.activity.subscribe(
+      act => this.db.deleteActivity(act)
+    )
+    this.router.navigate(['/'])
   }
 }

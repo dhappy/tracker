@@ -1,5 +1,5 @@
 <ol id='days' class='list'>
-	<ng-template ngFor let-day [ngForOf]='days | async'>
+	<ng-template ngFor let-day [ngForOf]='days'>
 		<li>
 			<div class='day'>{{day.displayText}}</div>
 			<ol *ngIf='day.events.length > 0' class='events'>

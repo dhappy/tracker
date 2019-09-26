@@ -1,27 +1,44 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore'
 import { DocumentChangeAction } from '@angular/fire/firestore'
 import { Observable } from 'rxjs'
 import { Activity } from '../models/Activity'
 import { Instance } from '../models/Instance'
 import { map } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { of, combineLatest } from 'rxjs'
+import { AngularFireAuth } from '@angular/fire/auth'
 
 @Injectable()
-export class DatabaseService {
+export class DatabaseService implements OnDestroy {
   public _userId:string
   public prefix:string = ''
 
-  public constructor(public db:AngularFirestore) {}
+  public constructor(
+    public db:AngularFirestore,
+    public as:AngularFireAuth
+  ) {
+    this.user = as.auth.currentUser
+  }
+
+  ngOnDestroy() {
+    // release events subscriptions
+  }
+
+  set user(user) {
+    if(user) {
+      this.userId = user.uid
+    } else {
+      this.userId = ''
+    }
+  }
 
   set userId(id) {
     this._userId = id
     if(id && id.length > 0) {
       this.prefix = `/users/${id}`
     } else {
-      this.prefix = ''
+      this.userId = 'public_user'
     }
-    console.info('PRE', this.prefix)
   }
 
   public getActivity(id:string):Observable<Activity> {
@@ -42,16 +59,17 @@ export class DatabaseService {
 
       this.db.collection(`${this.prefix}/activities`)
       .add(activity)
-      .then(function(docRef) {
-        console.debug('New Activity', docRef.id)
-      })
       .catch(error => console.error('Error Adding Activity', error))
     }
   }
 
-  public deleteActivity(id) {}
+  public deleteActivity(activity:Activity) {
+    console.info('DEL', activity.id)
+  }
 
-  public updateActivity(obj) {}
+  public updateActivity(activity:Activity) {
+    console.info('UP', activity)
+  }
 
   public getActivities():Observable<Activity[]> {
     return this.db.collection<Activity>(
@@ -90,41 +108,49 @@ export class DatabaseService {
     */
   }
 
-  public getEvents():Observable<Instance[]> {
-    let events:Observable<DocumentChangeAction<Instance>[]>
-
-    events = (
-      this.db
-      .collectionGroup<Instance>(
-        'events',
-        ref => ref.orderBy('time', 'desc')
-      )
-      .snapshotChanges()
+  public getEventsFor(activity:Activity):Observable<Instance[]> {
+    let path = (
+      `${this.prefix}/activities/${activity.id}/events`
     )
-
     return (
-      events.pipe(map(changes => {
-        let klass = this
+      this.db.collection<Instance>(path).valueChanges()
+    )
+  }                               
 
-        console.info('CNGs', changes)
+  public getEvents(activity?:Activity):Observable<Instance[]> {
+    return new Observable<Instance[]>(
+      subscriber => {
+        this.getActivities().subscribe(
+          (acts:Activity[]) => {
+            let eventLists:Observable<Instance[]>[] = (
+              acts.map((act:Activity) => {
+                return (
+                  this.getEventsFor(act)
+                  .pipe(map((evts:Instance[]) => {
+                    return evts.map((evt:Instance) => {
+                      let inst = new Instance(evt)
+                      inst.name = act.name
+                      inst.color = act.color
+                      return inst
+                    })
+                  }))
+                )
+              })
+            )
 
-        return changes.map(cng => {
-          let doc = cng.payload.doc
-          let inst = new Instance(doc.data())
+            let combined = combineLatest(...eventLists)
 
-          inst.parentId = doc.ref.parent.parent.path
-
-          klass.db.doc<Activity>(inst.parentId)
-          .valueChanges().subscribe(
-            doc => {
-              inst.name = doc.name
-              inst.color = doc.color
-            }
-          )
-
-          return inst
-        })
-      }))
+            combined.subscribe(
+              (evts:Instance[][]) => {
+                let list = (
+                  evts.flat().sort(Instance.compareByTime)
+                )
+                subscriber.next(list)
+              }
+            )
+          }
+        )
+      }
     )
   }
 }

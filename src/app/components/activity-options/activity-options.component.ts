@@ -15,12 +15,4 @@ export class ActivityOptionsComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
-
-  cancel() {
-    this.dialogRef.close()
-  }
-
-  delete() {
-    this.dialogRef.close()
-  }
 }

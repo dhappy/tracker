@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Host } from '@angular/core'
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { MatFormField } from '@angular/material/form-field'
@@ -9,6 +9,7 @@ import { Activity } from '../../models/Activity'
 import { map } from 'rxjs/operators'
 import { ActivityOptionsComponent } from '../activity-options/activity-options.component'
 import { DatabaseService } from '../../services/database.service'
+import { AppComponent } from '../../app.component'
 
 @Component({
   selector: 'app-activities-list',
@@ -21,7 +22,8 @@ export class ActivitiesListComponent implements OnInit {
 
   constructor(
     private db:DatabaseService,
-    public dialog:MatDialog
+    public dialog:MatDialog,
+    @Host() public app:AppComponent
   ) {
     this.activities = (
       this.db.getActivities()
@@ -47,6 +49,7 @@ export class ActivitiesListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.app.crumbs.push({ link: 'activities', text: 'Activities' })
   }
 
   createEvent(activity) {
