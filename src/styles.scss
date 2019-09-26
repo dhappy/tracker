@@ -9,9 +9,13 @@ body {
 }
 
 .corner-button {
-	position: fixed ! important;
-	right: 1em;
+	position: -webkit-sticky ! important;
+	position: sticky ! important;
+	position: fixed;
+	left: calc(100vw - 5em);
+	top: calc(100vh - 5em);
 	bottom: 1em;
+	right: 1em;
 }
 
 .colored-row {
