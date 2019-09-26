@@ -13,7 +13,7 @@ import { DatabaseService } from '../../services/database.service'
   styleUrls: ['./activity-deletion.component.scss']
 })
 export class ActivityDeletionComponent implements OnInit {
-  public activity:Observable<Activity>
+  public activity:Activity
 
   constructor(
     @Host() private parent:ActivityComponent,
@@ -22,13 +22,14 @@ export class ActivityDeletionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activity = this.parent.activity
+    this.parent.activity.subscribe(
+      act => this.activity = act
+    )
   }
 
   delete() {
-    this.activity.subscribe(
-      act => this.db.deleteActivity(act)
-    )
+    console.info('DEL', this.activity)
+    this.db.deleteActivity(this.activity)
     this.router.navigate(['/'])
   }
 }

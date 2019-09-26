@@ -1,9 +1,9 @@
 <ol id='activities' class='list'>
 	<ng-template ngFor let-activity [ngForOf]='activities | async'>
     <li (tap)='createEvent(activity)' (press)='options(activity)' class='colored-row'>
-		<span class='color' [style.background-color]='activity.color'></span>
-		<span class='name'>{{activity.name}}</span>
-		<span class='time'>{{activity.timeDelta}}</span>
+			<span class='color' [style.background-color]='activity.color'></span>
+			<span class='name'>{{activity.name}}</span>
+			<span class='time'>{{activity.timeDelta}}</span>
     </li>
   </ng-template>
 </ol>
