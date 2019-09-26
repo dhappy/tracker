@@ -12,6 +12,7 @@ import { AngularFireAuth } from '@angular/fire/auth'
 export class DatabaseService implements OnDestroy {
   public _userId:string
   public prefix:string = ''
+  private DEFAULT_USER = 'public_user'
 
   public constructor(
     public db:AngularFirestore,
@@ -33,12 +34,20 @@ export class DatabaseService implements OnDestroy {
   }
 
   set userId(id) {
-    this._userId = id
     if(id && id.length > 0) {
+      this._userId = id
       this.prefix = `/users/${id}`
     } else {
-      this.userId = 'public_user'
+      this.userId = this.DEFAULT_USER
     }
+  }
+
+  get userId() {
+    return this._userId
+  }
+
+  get authenticated() {
+    return this.userId !== this.DEFAULT_USER
   }
 
   public getActivity(id:string):Observable<Activity> {
@@ -46,6 +55,10 @@ export class DatabaseService implements OnDestroy {
       this.db
       .doc<Activity>(`${this.prefix}/activities/${id}`)
       .valueChanges()
+      .pipe(map(act => {
+        act.id = id
+        return act
+      }))
     )
   }
 
@@ -68,7 +81,9 @@ export class DatabaseService implements OnDestroy {
   }
 
   public updateActivity(activity:Activity) {
+    let path = `${this.prefix}/activities/${activity.id}`
     console.info('UP', activity)
+    this.db.doc(path).set(activity)
   }
 
   public getActivities():Observable<Activity[]> {

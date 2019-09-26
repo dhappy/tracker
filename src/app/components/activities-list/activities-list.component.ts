@@ -23,7 +23,9 @@ export class ActivitiesListComponent implements OnInit {
   constructor(
     private db:DatabaseService,
     public dialog:MatDialog
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.activities = (
       this.db.getActivities()
       .pipe(map(acts => {
@@ -46,8 +48,6 @@ export class ActivitiesListComponent implements OnInit {
       }))
     )
   }
-
-  ngOnInit() {}
 
   createEvent(activity) {
     let now = new Date

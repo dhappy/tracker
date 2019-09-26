@@ -1,6 +1,6 @@
 <form
  #activityForm='ngForm'
- (ngSubmit)='activityForm.valid ? create() : false'>
+ (ngSubmit)='activityForm.valid ? process() : false'>
   <mat-form-field>
     <input matInput [(ngModel)]='name' #nameInput='ngModel' name='name' placeholder='Name' (keydown)='keydown($event)' required/>
   </mat-form-field>
@@ -13,7 +13,10 @@
 		  <button mat-button routerLink='/'>Cancel</button>
 		</mat-list-item>
   	<mat-list-item>
-		  <button mat-raised-button type='submit' color='primary'>Create</button>
+		  <button mat-raised-button type='submit' color='primary'>
+        <ng-template [ngIf]='editing()' [ngIfElse]='create'>Update</ng-template>
+        <ng-template #create>Create</ng-template>
+      </button>
 		</mat-list-item>
 	</mat-action-list>
 </form>

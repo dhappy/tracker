@@ -19,7 +19,6 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id')
-
     this.activity = this.db.getActivity(id)
   }
 }
