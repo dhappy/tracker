@@ -9,8 +9,8 @@ body {
 }
 
 .corner-button {
-	position: -webkit-sticky ! important;
-	position: sticky ! important;
+	//position: -webkit-sticky ! important;
+	//position: sticky ! important;
 	position: fixed;
 	left: calc(100vw - 5em);
 	top: calc(100vh - 5em);
