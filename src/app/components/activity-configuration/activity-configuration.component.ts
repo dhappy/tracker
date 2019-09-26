@@ -14,19 +14,12 @@ export class ActivityConfigurationComponent implements OnInit {
   public name:string
   public color:string
 
-  private container:ActivityComponent
-
   constructor(
-    @Optional() container:ActivityComponent,
+    @Optional() public parent:ActivityComponent,
     public db:DatabaseService
-  ) {
-    this.container = container // necessary?
-  }
+  ) {}
 
   ngOnInit() {
-    if(this.container) {
-      console.info('P2', this.container.activity)//, this.parent.activity)
-    }
   }
 
   create() {

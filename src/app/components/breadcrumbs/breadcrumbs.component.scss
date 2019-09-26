@@ -1,0 +1,24 @@
+#crumbs {
+	display: flex;
+	list-style: none;
+	padding: 0 0 0 0.25em;
+
+	li {
+		display: flex;
+		text-transform: capitalize;
+
+		&:after {
+			padding: 0 0.25em;
+			content: '/';
+			font-weight: bold;
+		}
+
+		&:last-child:after {
+			content: '';
+		}
+
+		a {
+			text-decoration: none;
+		}
+	}
+}

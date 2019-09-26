@@ -18,7 +18,6 @@ export class EventsListComponent implements OnInit {
   constructor(public db:DatabaseService) {}
 
   ngOnInit() {
-    console.info('OnInit', this.db.getEvents())
     this.db.getEvents().subscribe(
       (evts:Instance[]) => {
         this.days = this.groupByDay(evts)
@@ -27,8 +26,6 @@ export class EventsListComponent implements OnInit {
   }
 
   groupByDay(events:Instance[]):Day[] {
-    console.info('gBD', events)
-
     let byDay = (
       events.reduce((ret:any, event:Instance) => {
         let day = (

@@ -1,1 +1,6 @@
-<p>breadcrumbs works!</p>
+<ol id='crumbs'>
+  <li><a routerLink=''>Tracker</a></li>
+  <ng-template ngFor let-crumb [ngForOf]='crumbs'>
+    <li><a [routerLink]='crumb.link'>{{crumb.text}}</a></li>
+  </ng-template>
+</ol>

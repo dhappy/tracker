@@ -22,8 +22,7 @@ export class ActivitiesListComponent implements OnInit {
 
   constructor(
     private db:DatabaseService,
-    public dialog:MatDialog,
-    @Host() public app:AppComponent
+    public dialog:MatDialog
   ) {
     this.activities = (
       this.db.getActivities()
@@ -48,9 +47,7 @@ export class ActivitiesListComponent implements OnInit {
     )
   }
 
-  ngOnInit() {
-    this.app.crumbs.push({ link: 'activities', text: 'Activities' })
-  }
+  ngOnInit() {}
 
   createEvent(activity) {
     let now = new Date

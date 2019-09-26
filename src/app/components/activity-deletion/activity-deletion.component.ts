@@ -17,17 +17,12 @@ export class ActivityDeletionComponent implements OnInit {
 
   constructor(
     @Host() private parent:ActivityComponent,
-    @Host() private app:AppComponent,
     public db:DatabaseService,
     public router:Router
   ) {}
 
   ngOnInit() {
     this.activity = this.parent.activity
-
-    this.app.crumbs.push(
-      { link: 'delete', text: 'Delete' }
-    )
   }
 
   delete() {

@@ -14,18 +14,22 @@ const routes:Routes = [
 	},
 	{
 		path: 'activities',
+		data: { crumb: false },
 		children:[
 			{
 				path: '',
 				component: ActivitiesListComponent,
+				data: { crumb: 'Activities' },
 			},
 			{
 				path: 'new',
-				component: ActivityConfigurationComponent
+				component: ActivityConfigurationComponent,
+				data: { crumb: 'New Activity' },
 			},
 			{
 				path: ':id',
 				component: ActivityComponent,
+				data: { crumb: 'Activity' },
 				children: [
 					{
 						path: '',
@@ -34,11 +38,11 @@ const routes:Routes = [
 					},
 					{
 						path: 'edit',
-	    			component: ActivityConfigurationComponent
+	    			component: ActivityConfigurationComponent,
 	    		},
 	    		{
 	    			path: 'delete',
-				    component: ActivityDeletionComponent
+				    component: ActivityDeletionComponent,
 	    		}
 				]
 			},
@@ -53,8 +57,6 @@ const routes:Routes = [
 			},
 		],
 	},
-	// There is a nested syntax that's prettier
-	// https://angular.io/guide/router#resolve-guard
 ]
 
 @NgModule({

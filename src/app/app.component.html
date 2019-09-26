@@ -29,11 +29,7 @@
 			<button mat-raised-button color='primary' (click)='menu.toggle()'>
 				<mat-icon>menu</mat-icon>
 			</button>
-      <td-breadcrumbs>
-        <ng-template ngFor let-crumb [ngForOf]='crumbs'>
-          <a td-breadcrumb [routerLink]='crumb.link'>{{crumb.text}}</a>
-        </ng-template>
-      </td-breadcrumbs>
+      <app-breadcrumbs></app-breadcrumbs>
 		</mat-toolbar>
 		<div id='content'>
 			<router-outlet></router-outlet>
