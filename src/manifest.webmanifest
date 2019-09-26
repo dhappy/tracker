@@ -1,6 +1,7 @@
 {
-  "name": "tracker",
-  "short_name": "tracker",
+  "gcm_sender_id": "103953800507",
+  "name": "Habit Tracker",
+  "short_name": "Tracker",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
