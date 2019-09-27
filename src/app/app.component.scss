@@ -1,10 +1,13 @@
 #content {
 	margin-top: 4em;
-	position: relative;
 }
 
-.mat-sidenav-container, .mat-sidenav-content, #content {
-	min-height: calc(100vh - 4em);
+.mat-sidenav-container {
+	min-height: 100vh;
+}
+
+.mat-sidenav {
+	position: fixed;
 }
 
 .mat-toolbar {
