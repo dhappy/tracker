@@ -28,13 +28,29 @@ body {
 		display: flex;
 		flex: 0;
 		padding: .25em;
+		font-family: Roboto, sans-serif;
 
 		&.name {
 			flex: 1;
+
+			& > *:first-child {
+				margin-top: 0;
+				padding-top: 0;
+			}
+
+			& > *:last-child {
+				margin-bottom: 0;
+				padding-bottom: 0;
+			}
+
+			p {
+				font-size: 0.9em;
+			}
 		}
 
 		&.time {
 			justify-content: flex-end;
+			align-self: center;
 		}
 
 		&.color {

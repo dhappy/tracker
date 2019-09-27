@@ -27,6 +27,7 @@ import { EventsListComponent } from './components/events-list/events-list.compon
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component'
+import { MarkdownModule } from 'ngx-markdown'
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     MatListModule,
     MatSidenavModule,
     MatToolbarModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [DatabaseService],
   bootstrap: [AppComponent],
