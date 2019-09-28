@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core'
 import { AngularFireAuth } from '@angular/fire/auth'
 import { auth } from 'firebase/app'
 import { DatabaseService } from './services/database.service'
+import { MessagingService } from './services/messaging.service'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'app-root',
@@ -10,10 +12,12 @@ import { DatabaseService } from './services/database.service'
 })
 export class AppComponent implements OnInit {
   private routedComponent:OnInit
+  public message:BehaviorSubject<any>
 
   constructor(
     public afAuth:AngularFireAuth,
-    public db:DatabaseService
+    public db:DatabaseService,
+    public ms:MessagingService
   ) {
     afAuth.auth.onAuthStateChanged(
       user => {
@@ -23,7 +27,11 @@ export class AppComponent implements OnInit {
     )
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.ms.getPermission()
+    this.ms.receiveMessage()
+    this.message = this.ms.currentMessage
+  }
 
   public setRoutedComponent(componentRef:OnInit) {
     this.routedComponent = componentRef

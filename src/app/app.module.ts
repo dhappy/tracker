@@ -44,7 +44,7 @@ import { MarkdownModule } from 'ngx-markdown'
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('msg+cache-worker.js', { enabled: environment.production }),
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
