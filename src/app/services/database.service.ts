@@ -168,4 +168,9 @@ export class DatabaseService implements OnDestroy {
       }
     )
   }
+
+  updateMessagingToken(token:any) {
+    this.db.doc(`/users/${this.userId}`)
+    .set({ msgToken: token })
+  }
 }

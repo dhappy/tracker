@@ -32,7 +32,7 @@
       <app-breadcrumbs></app-breadcrumbs>
 		</mat-toolbar>
 		<div id='content'>
-			{{message | async | json}}
+			<!--{{message | async | json}}-->
 			<router-outlet (activate)="setRoutedComponent($event)"></router-outlet>
 		</div>
   </mat-sidenav-content>

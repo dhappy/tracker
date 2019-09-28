@@ -16,7 +16,6 @@ import { AngularFireModule } from '@angular/fire'
 import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { ActivitiesListComponent } from './components/activities-list/activities-list.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { MccColorPickerModule } from 'material-community-components'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 import { ActivityOptionsComponent } from './components/activity-options/activity-options.component'
 import { MatListModule } from '@angular/material/list'
@@ -28,6 +27,8 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component'
 import { MarkdownModule } from 'ngx-markdown'
+import { AngularFireMessagingModule } from '@angular/fire/messaging'
+import { ColorPickerModule } from 'ngx-color-picker'
 
 @NgModule({
   declarations: [
@@ -54,12 +55,13 @@ import { MarkdownModule } from 'ngx-markdown'
     AngularFirestoreModule.enablePersistence(),
     FormsModule,
     ReactiveFormsModule,
-    MccColorPickerModule,
     AngularFireAuthModule,
     MatListModule,
     MatSidenavModule,
     MatToolbarModule,
     MarkdownModule.forRoot(),
+    AngularFireMessagingModule,
+    ColorPickerModule,
   ],
   providers: [DatabaseService],
   bootstrap: [AppComponent],

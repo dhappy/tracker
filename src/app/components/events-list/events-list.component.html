@@ -6,7 +6,7 @@
 				<ng-template ngFor let-event [ngForOf]='day.events'>
 					<li class='colored-row'>
 						<span class='color' [style.background-color]='event.color'></span>
-						<span class='name'>{{event.name}}</span>
+						<span markdown class='name' [data]='event.name'></span>
 						<span class='time'>{{event.displayTime}}</span>
 					</li>
 				</ng-template>

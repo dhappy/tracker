@@ -31,7 +31,7 @@
     "marked": "^0.7.0",
     "material-community-components": "^5.0.1",
     "moment": "^2.24.0",
-    "ngx-color-picker": "^8.1.0",
+    "ngx-color-picker": "^8.2.0",
     "ngx-markdown": "^8.1.0",
     "pouchdb": "^7.1.1",
     "pouchdb-find": "^7.1.1",

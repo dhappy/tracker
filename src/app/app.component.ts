@@ -28,9 +28,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ms.getPermission()
-    this.ms.receiveMessage()
-    this.message = this.ms.currentMessage
+    //this.ms.requestPermission()
+    //this.ms.receiveMessage()
+    //this.message = this.ms.currentMessage
   }
 
   public setRoutedComponent(componentRef:OnInit) {

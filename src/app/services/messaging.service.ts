@@ -1,52 +1,47 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { messaging } from 'firebase/app'
+import { AngularFireMessaging } from '@angular/fire/messaging'
 import { take } from 'rxjs/operators'
 import { BehaviorSubject } from 'rxjs'
+import { DatabaseService } from './database.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-  public messaging = messaging()
   public currentMessage = new BehaviorSubject(null)
 
   constructor(
-    private db: AngularFirestore,
-    private afAuth: AngularFireAuth
-  ) {}
-
-  updateToken(token) {
-    this.afAuth.authState.pipe(take(1)).subscribe(
-      user => {
-        if (!user) return;
-
-        const data = { [user.uid]: token }
-        // this.db.object('fcmTokens/').update(data)
+    private db: DatabaseService,
+    private afa: AngularFireAuth,
+    private afm:AngularFireMessaging
+  ) {
+    this.afm.messaging.subscribe(
+      (_messaging) => {
+        _messaging.onMessage = _messaging.onMessage.bind(_messaging);
+        _messaging.onTokenRefresh = _messaging.onTokenRefresh.bind(_messaging);
       }
     )
   }
 
-  getPermission() {
-      this.messaging.requestPermission()
-      .then(() => {
-        console.log('Notification permission granted.');
-        return this.messaging.getToken()
-      })
-      .then(token => {
-        console.log(token)
-        this.updateToken(token)
-      })
-      .catch((err) => {
-        console.log('Unable to get permission to notify.', err);
-      });
-    }
-
-    receiveMessage() {
-      this.messaging.onMessage((payload) => {
-        console.log("Message Received", payload);
+  requestPermission() {
+    this.afm.requestToken.subscribe(
+      (token) => {
+        console.info('MESS TKN', token)
+        this.db.updateMessagingToken(token)
+      },
+      (err) => {
+        console.error('Unable to get notify permission.', err)
+      }
+    )
+  }
+  
+  receiveMessage() {
+    this.afm.messages.subscribe(
+      (payload) => {
+        console.debug('Nw Msg', payload)
         this.currentMessage.next(payload)
-      });
-    }
+      }
+    )
+  }
 }
