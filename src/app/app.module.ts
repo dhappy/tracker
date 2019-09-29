@@ -28,7 +28,8 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component'
 import { MarkdownModule } from 'ngx-markdown'
 import { AngularFireMessagingModule } from '@angular/fire/messaging'
-import { ColorPickerModule } from 'ngx-color-picker'
+import { ColorPickerModule } from 'ngx-color-picker';
+import { GoalConfigurationComponent } from './components/goal-configuration/goal-configuration.component'
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ColorPickerModule } from 'ngx-color-picker'
     ActivityComponent,
     EventsListComponent,
     BreadcrumbsComponent,
+    GoalConfigurationComponent,
   ],
   imports: [
     BrowserModule,

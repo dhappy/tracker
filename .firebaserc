@@ -1,12 +1,19 @@
 {
   "projects": {
-    "default": "tracker-fecd2"
+    "default": "htrack"
   },
   "targets": {
     "tracker-fecd2": {
       "hosting": {
         "tracker": [
           "tracker-fecd2"
+        ]
+      }
+    },
+    "htrack": {
+      "hosting": {
+        "tracker": [
+          "htrack"
         ]
       }
     }
